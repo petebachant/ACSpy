@@ -1,4 +1,4 @@
 ACSpy
 =====
 
-Wrapper package for the ACS motion control C library.
+A Python package for working with ACS motion controllers.
