@@ -69,7 +69,7 @@ def openCommDirect():
     return hcomm
 
 def openCommEthernetTCP(address="10.0.0.100", port=701):
-    """Address is a string. Port is an int. Add default arguments!
+    """Address is a string. Port is an int.
     Returns communication handle."""
     hcomm = acs.acsc_OpenCommEthernetTCP(address, port)
     return hcomm
