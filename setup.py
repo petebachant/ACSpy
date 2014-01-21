@@ -13,6 +13,5 @@ setup(
     url='https://github.com/petebachant/ACSpy.git',
     license='LICENSE',
     description='Package for working with ACS motion controllers.',
-    long_description=open('README.md').read(),
-    install_requires=[]
+    long_description=open('README.md').read()
 )
