@@ -54,8 +54,8 @@ INT_TYPE = 1
 REAL_TYPE = 2	
 
 # Dicts for states
-mstates = {16:'disabled', 17:'enabled'}
-astates = {97:'accelerating', 33:'moving', 0:'stopped'}
+mstates = {16 : 'disabled', 17 : 'enabled'}
+astates = {97 : 'accelerating', 33 : 'moving', 0 : 'stopped'}
 
 
 def openCommDirect():
@@ -64,17 +64,15 @@ def openCommDirect():
     if hcomm == -1:
         error = getLastError()
         if error in errors:
-            print "ACS SPiiPlus Error", error, errors[error]
+            print "ACS SPiiPlus Error", error+":", errors[error]
         else: print "ACS SPiiPlus Error", error
     return hcomm
-
 
 def openCommEthernetTCP(address="10.0.0.100", port=701):
     """Address is a string. Port is an int. Add default arguments!
     Returns communication handle."""
     hcomm = acs.acsc_OpenCommEthernetTCP(address, port)
     return hcomm
-
 
 def setVelocity(hcomm, axis, vel, wait=SYNCHRONOUS):
     """Sets axis velocity"""
@@ -121,11 +119,9 @@ def jog(hcomm, flags, axis, vel, wait=SYNCHRONOUS):
     """Jog move."""
     acs.acsc_Jog(hcomm, flags, axis, double(vel), wait)
 
-
 def toPoint(hcomm, flags, axis, target, wait=SYNCHRONOUS):
     """Point to point move."""
     acs.acsc_ToPoint(hcomm, flags, axis, double(target), wait)
-
 
 def toPointM(hcomm, flags, axes, target, wait=SYNCHRONOUS):
     """Initiates a multi-axis move to the specified target. Axes and target
@@ -143,45 +139,36 @@ def toPointM(hcomm, flags, axes, target, wait=SYNCHRONOUS):
         axes_c[-1] = -1
         errorHandling(acs.acsc_ToPointM(hcomm, flags, axes_c, target_c, wait))
 
-
 def enable(hcomm, axis, wait=SYNCHRONOUS):
     acs.acsc_Enable(hcomm, int32(axis), wait)
     
-
 def disable(hcomm, axis, wait=SYNCHRONOUS):
     acs.acsc_Disable(hcomm, int32(axis), wait)
-
 
 def getRPosition(hcomm, axis, wait=SYNCHRONOUS):
     pos = double()
     acs.acsc_GetRPosition(hcomm, axis, p(pos), wait)
     return pos.value
     
-    
 def getFPosition(hcomm, axis, wait=SYNCHRONOUS):
     pos = double()
-    acs.acsc_GetFPosition(hcomm, axis, p(pos), wait)
+    acs.acsc_GetFPosition(hcomm, axis, byref(pos), wait)
     return pos.value
     
-
 def getRVelocity(hcomm, axis, wait=SYNCHRONOUS):
     rvel = double()
-    acs.acsc_GetRVelocity(hcomm, axis, p(rvel), wait)
+    acs.acsc_GetRVelocity(hcomm, axis, byref(rvel), wait)
     return rvel.value
     
-
 def getFVelocity(hcomm, axis, wait=SYNCHRONOUS):
     vel = double()
-    acs.acsc_GetFVelocity(hcomm, axis, p(vel), wait)
+    acs.acsc_GetFVelocity(hcomm, axis, byref(vel), wait)
     return vel.value
     
-    
 def getVelocity(hcomm, axis, wait=SYNCHRONOUS):
-    pos = double()
-    ppos = ctypes.pointer(pos)
-    acs.acsc_GetVelocity(hcomm, axis, ppos, wait)
+    vel = double()
+    acs.acsc_GetVelocity(hcomm, axis, byref(vel), wait)
     return pos.value
-
 
 def closeComm(hcomm):
     """Closes communication with the controller."""
