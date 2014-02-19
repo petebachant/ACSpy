@@ -44,6 +44,11 @@ class Control(object):
     def disconnect(self):
         acsc.closeComm(self.hc)
         
+class Axis(object):
+    def __init__(self, axisno, control):
+        self.control = control
+        self.axisno = axisno
+        
 
 if __name__ == "__main__":
     import time
