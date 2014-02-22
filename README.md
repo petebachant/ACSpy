@@ -18,7 +18,7 @@ The `acsc` module is designed to mimic the syntax of the ACS C library that it w
 >>> hcomm = acsc.openCommDirect()
 >>> acsc.enable(hcomm, 0)
 >>> acsc.getMotorState(hcomm, 0)
-'enabled'
+{'moving': False, 'enabled': True, 'in position': True, 'accelerating': False}
 >>> acsc.closeComm(hcomm)
 ```
 
