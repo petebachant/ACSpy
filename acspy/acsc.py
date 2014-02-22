@@ -33,7 +33,16 @@ AMF_VELOCITY = 0x00000004
 AMF_CYCLIC = 0x00000100
 AMF_CUBIC = 0x00000400
 
+# Axis states
+AST_LEAD = 0x00000001
+AST_DC = 0x00000002
+AST_PEG = 0x00000004
+AST_PEGREADY = 0x00000010
 AST_MOVE = 0x00000020
+AST_ACC = 0x00000040
+AST_SEGMENT = 0x00000080
+AST_VELLOCK = 0x00000100
+AST_POSLOCK = 0x00000200
 
 # Motor states
 MST_ENABLE = 0x00000001
@@ -52,11 +61,6 @@ INT_BINARY = 4
 REAL_BINARY	 = 8
 INT_TYPE = 1
 REAL_TYPE = 2	
-
-# Dicts for states
-mstates = {16 : 'disabled', 17 : 'enabled'}
-astates = {97 : 'accelerating', 33 : 'moving', 0 : 'stopped'}
-
 
 def openCommDirect():
     """Open simulator. Returns communication handle."""
@@ -90,25 +94,46 @@ def setJerk(hcomm, axis, jerk, wait=SYNCHRONOUS):
     acs.acsc_SetAcceleration(hcomm, axis, double(jerk), wait)
     
 def getMotorState(hcomm, axis, wait=SYNCHRONOUS):
-    """Gets the motor state. Returns 'enabled', 'disabled', 
-    or 'something else'."""
+    """Gets the motor state. Returns a dictionary with the following keys:
+      * "enabled"
+      * "in position"
+      * "moving"
+      * "accelerating"
+    """
     state = ctypes.c_int()
     acs.acsc_GetMotorState(hcomm, axis, byref(state), wait)
-    if state.value in mstates:
-        rstate = mstates[state.value]
-    else: rstate = 'something else'
-    return rstate
+    state = state.value
+    mst = {"enabled" : hex(state)[-1] == "1",
+           "in position" : hex(state)[-2] == "1",
+           "moving" : hex(state)[-2] == "2",
+           "accelerating" : hex(state)[-2] == "4"}
+    return mst
     
 def getAxisState(hcomm, axis, wait=SYNCHRONOUS):
-    """Gets the axis state. Returns 'accelerating', 'moving', 'stopped', or
-    'something else'."""
+    """Gets the axis state. Returns a dictionary with the following keys
+      * "lead"
+      * "DC"
+      * "PEG"
+      * "PEGREADY"
+      * "moving"
+      * "accelerating"
+      * "segment"
+      * "vel lock"
+      * "pos lock"
+     """
     state = ctypes.c_int()
-    pstate = ctypes.pointer(state)
-    acs.acsc_GetAxisState(hcomm, axis, pstate, wait)
-    if state.value in astates:
-        rstate = astates[state.value]
-    else: rstate = 'something else'
-    return rstate
+    acs.acsc_GetAxisState(hcomm, axis, byref(state), wait)
+    state = state.value
+    ast = {"lead" : hex(state)[-1] == "1",
+           "DC" : hex(state)[-1] == "2",
+           "PEG" : hex(state)[-1] == "4",
+           "PEGREADY" : hex(state)[-2] == "1",
+           "moving" : hex(state)[-2] == "2",
+           "accelerating" : hex(state)[-2] == "4",
+           "segment" : hex(state)[-2] == "8",
+           "vel lock" : hex(state)[-3] == "1",
+           "pos lock" : hex(state)[-3] == "2"}
+    return ast
 
 def registerEmergencyStop():
     """Register the software emergency stop."""
@@ -309,8 +334,6 @@ def printLastError():
             
 if __name__ == "__main__":
     """Some testing can go here"""
-    hc = openCommDirect()
-    declareVariable(hc, INT_TYPE, "testvar")
-    writeInteger(hc, "testvar", 2)
-    print readInteger(hc, NONE, "testvar")
+    hc = openCommEthernetTCP()
+    print getMotorState(hc, 0)
     closeComm(hc)
