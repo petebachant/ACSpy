@@ -93,8 +93,7 @@ def getMotorState(hcomm, axis, wait=SYNCHRONOUS):
     """Gets the motor state. Returns 'enabled', 'disabled', 
     or 'something else'."""
     state = ctypes.c_int()
-    pstate = ctypes.pointer(state)
-    acs.acsc_GetMotorState(hcomm, axis, pstate, wait)
+    acs.acsc_GetMotorState(hcomm, axis, byref(state), wait)
     if state.value in mstates:
         rstate = mstates[state.value]
     else: rstate = 'something else'
