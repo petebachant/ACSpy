@@ -286,36 +286,38 @@ def loadBuffersFromFile(hcomm, filename, wait=SYNCHRONOUS):
 def spline(hcomm, flags, axis, period, wait=SYNCHRONOUS):
     rv = acs.acsc_Spline(hcomm, flags, axis, double(period), wait)
     errorHandling(rv)
-    
-    
+        
 def addPVPoint(hcomm, axis, point, velocity, wait=SYNCHRONOUS):
     acs.acsc_AddPVPoint(hcomm, axis, double(point), double(velocity), wait)
-    
-    
+        
 def addPVTPoint(hcomm, axis, point, velocity, dt, wait=SYNCHRONOUS):
     acs.acsc_AddPVTPoint(hcomm, axis, double(point), double(velocity), 
                          double(dt), wait)
-                         
-                         
+                                                  
 def multiPoint(hcomm, flags, axis, dwell, wait=SYNCHRONOUS):
     acs.acsc_MultiPoint(hcomm, flags, axis, double(dwell), wait)
-    
-    
+        
 def addPoint(hcomm, axis, point, wait=SYNCHRONOUS):
     acs.acsc_AddPoint(hcomm, axis, double(point), wait)
-    
-    
+        
 def extAddPoint(hcomm, axis, point, rate, wait=SYNCHRONOUS):
     acs.acsc_ExtAddPoint(hcomm, axis, double(point), double(rate), wait)
-    
-    
+        
 def endSequence(hcomm, axis, wait=SYNCHRONOUS):
     return acs.acsc_EndSequence(hcomm, axis, wait)
     
-
 def go(hcomm, axis, wait=SYNCHRONOUS):
     acs.acsc_Go(hcomm, axis, wait)
 
+def getOutput(hcomm, port, bit, wait=SYNCHRONOUS):
+    """Returns the value of a digital output."""
+    val = int32()
+    acs.acsc_GetOutput(hcomm, port, bit, byref(val), wait)
+    return val.value
+    
+def setOutput(hcomm, port, bit, val, wait=SYNCHRONOUS):
+    """Sets the value of a digital output."""
+    acs.acsc_SetOutput(hcomm, port, bit, val, wait)
     
 def errorHandling(returnvalue):
     if returnvalue == 0:
@@ -335,5 +337,5 @@ def printLastError():
 if __name__ == "__main__":
     """Some testing can go here"""
     hc = openCommEthernetTCP()
-    print getMotorState(hc, 0)
+    print getOutput(hc, 1, 16)
     closeComm(hc)
