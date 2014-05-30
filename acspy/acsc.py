@@ -68,7 +68,7 @@ def openCommDirect():
     if hcomm == -1:
         error = getLastError()
         if error in errors:
-            print("ACS SPiiPlus Error", error+":", errors[error])
+            print("ACS SPiiPlus Error", str(error) + ":", errors[error])
         else: print("ACS SPiiPlus Error", error)
     return hcomm
 
