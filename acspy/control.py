@@ -3,6 +3,7 @@
 This module contains an [incomplete] object for communicating with an ACS controller.
 
 """
+from __future__ import print_function
 from acspy import acsc
 
 
@@ -58,5 +59,5 @@ if __name__ == "__main__":
     c.enable_axis("x")
     c.ptp("x", 10)
     time.sleep(0.1)
-    print c.rpos("x")
+    print(c.rpos("x"))
     c.disconnect()

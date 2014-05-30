@@ -7,6 +7,7 @@ Created on Wed Aug 14 21:13:07 2013
 This module contains functions for generating ACSPL+ programs
 
 """
+from __future__ import print_function
 
 class ACSPLplusPrg(object):
     def __init__(self):
@@ -49,4 +50,4 @@ if __name__ == "__main__":
     prg = ACSPLplusPrg()
     prg.addline("test")
     prg.addline("newman")
-    print prg
+    print(prg)

@@ -11,7 +11,7 @@ To-do
 A lot of the functions need error handing added, i.e. they don't care what the 
 ACSC function returns.
 """
-
+from __future__ import division, print_function
 import ctypes
 from ctypes import byref
 from errors import errors
@@ -68,8 +68,8 @@ def openCommDirect():
     if hcomm == -1:
         error = getLastError()
         if error in errors:
-            print "ACS SPiiPlus Error", error+":", errors[error]
-        else: print "ACS SPiiPlus Error", error
+            print("ACS SPiiPlus Error", error+":", errors[error])
+        else: print("ACS SPiiPlus Error", error)
     return hcomm
 
 def openCommEthernetTCP(address="10.0.0.100", port=701):
@@ -151,7 +151,7 @@ def toPointM(hcomm, flags, axes, target, wait=SYNCHRONOUS):
     """Initiates a multi-axis move to the specified target. Axes and target
     are entered as tuples. Set flags as None for absolute coordinates."""
     if len(axes) != len(target):
-        print "Number of axes and coordinates don't match!"
+        print("Number of axes and coordinates don't match!")
     else:
         target_array = double*len(axes)
         axes_array = ctypes.c_int*(len(axes) + 1)
@@ -323,19 +323,19 @@ def errorHandling(returnvalue):
     if returnvalue == 0:
         error = getLastError()
         if error in errors:
-            print "Error", error, errors[error]
-        else: print "Error", error
+            print("Error", error, errors[error])
+        else: print("Error", error)
         
 def printLastError():
     error = getLastError()
     if error != 0:
         if error in errors:
-            print errors[error]
+            print(errors[error])
         else:
-            print "ACS SPiiPlus Error", error
+            print("ACS SPiiPlus Error", error)
             
 if __name__ == "__main__":
     """Some testing can go here"""
     hc = openCommEthernetTCP()
-    print getOutput(hc, 1, 16)
+    print(getOutput(hc, 1, 16))
     closeComm(hc)
