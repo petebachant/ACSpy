@@ -14,7 +14,8 @@ ACSC function returns.
 from __future__ import division, print_function
 import ctypes
 from ctypes import byref
-from errors import errors
+from . import errors
+from .errors import errors
 import numpy as np
 import platform
 
