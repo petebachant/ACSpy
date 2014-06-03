@@ -23,8 +23,8 @@ The `acsc` module is designed to mimic the syntax of the ACS C library that it w
 ```
 
 ### Using the `Controller` and `Axis` objects
-The `control` module contains an object to handle communication with the controller, and
-and object to represent an axis.
+The `control` module contains an object to handle communication with the controller and
+an object to represent an axis.
 An example of its use:
 
 ```python
