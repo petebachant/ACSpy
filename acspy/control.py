@@ -67,7 +67,7 @@ class Axis(object):
         
     def ptpr(self, distance, wait=acsc.SYNCHRONOUS):
         """Performance a point to point move in relative coordinates."""
-        self.ptp(distance, coordinates="absolute", wait=wait)
+        self.ptp(distance, coordinates="relative", wait=wait)
         
     @property
     def axis_state(self):
