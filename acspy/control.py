@@ -153,8 +153,10 @@ if __name__ == "__main__":
     axis0.dec = 100000
     
     axis0.ptp(100000)
-    time.sleep(2)
-    print(axis0.in_position)
+    time.sleep(1)
+    print(axis0.rpos)
+    print(axis0.acc)
+    print(axis0.dec)
     
     controller.disconnect()
     

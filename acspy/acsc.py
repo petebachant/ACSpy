@@ -200,6 +200,18 @@ def getVelocity(hcomm, axis, wait=SYNCHRONOUS):
     vel = double()
     acs.acsc_GetVelocity(hcomm, axis, byref(vel), wait)
     return vel.value
+    
+def getAcceleration(hcomm, axis, wait=SYNCHRONOUS):
+    """Returns current acceleration for specified axis."""
+    val = double()
+    acs.acsc_GetAcceleration(hcomm, axis, byref(val), wait)
+    return val.value
+    
+def getDeceleration(hcomm, axis, wait=SYNCHRONOUS):
+    """Returns current deceleration for specified axis."""
+    val = double()
+    acs.acsc_GetDeceleration(hcomm, axis, byref(val), wait)
+    return val.value
 
 def closeComm(hcomm):
     """Closes communication with the controller."""
