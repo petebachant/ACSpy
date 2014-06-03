@@ -62,7 +62,7 @@ class Axis(object):
         if coordinates == "relative":
             flags = acsc.AMF_RELATIVE
         else:
-            flags = acsc.NONE
+            flags = None
         acsc.toPoint(self.controller.hc, flags, self.axisno, target, wait)
         
     def ptpr(self, distance, wait=acsc.SYNCHRONOUS):
@@ -139,7 +139,7 @@ class Axis(object):
 if __name__ == "__main__":
     import time
     
-    controller = Controller()
+    controller = Controller("simulator")
     controller.connect()
     
     axis0 = Axis(controller, 0)
