@@ -85,15 +85,15 @@ def openCommEthernetTCP(address="10.0.0.100", port=701):
     return hcomm
 
 def setVelocity(hcomm, axis, vel, wait=SYNCHRONOUS):
-    """Sets axis velocity"""
+    """Sets axis velocity."""
     acs.acsc_SetVelocity(hcomm, axis, double(vel), wait)
 
 def setAcceleration(hcomm, axis, acc, wait=SYNCHRONOUS):
-    """Sets axis acceleration"""
+    """Sets axis acceleration."""
     acs.acsc_SetAcceleration(hcomm, axis, double(acc), wait)
     
 def setDeceleration(hcomm, axis, dec, wait=SYNCHRONOUS):
-    """Sets axis deceleration"""
+    """Sets axis deceleration."""
     acs.acsc_SetDeceleration(hcomm, axis, double(dec), wait)
     
 def setJerk(hcomm, axis, jerk, wait=SYNCHRONOUS):
@@ -196,9 +196,10 @@ def getFVelocity(hcomm, axis, wait=SYNCHRONOUS):
     return vel.value
     
 def getVelocity(hcomm, axis, wait=SYNCHRONOUS):
+    """Returns current velocity for specified axis."""
     vel = double()
     acs.acsc_GetVelocity(hcomm, axis, byref(vel), wait)
-    return pos.value
+    return vel.value
 
 def closeComm(hcomm):
     """Closes communication with the controller."""
