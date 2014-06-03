@@ -10,7 +10,7 @@ Installation
 
 Usage
 -----
-### Using the acsc module
+### Using the `acsc` module
 The `acsc` module is designed to mimic the syntax of the ACS C library that it wraps. 
 
 ```python
@@ -22,7 +22,7 @@ The `acsc` module is designed to mimic the syntax of the ACS C library that it w
 >>> acsc.closeComm(hcomm)
 ```
 
-### Using a Control object
+### Using a `Control` object
 The `control` module contains an object to handle communication with the controller.
 This object does not yet implement all of the functions available in the `acsc` module.
 An example of its use:
