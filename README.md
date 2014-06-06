@@ -22,19 +22,23 @@ The `acsc` module is designed to mimic the syntax of the ACS C library that it w
 >>> acsc.closeComm(hcomm)
 ```
 
-### Using the `Controller` and `Axis` objects
-The `control` module contains an object to handle communication with the controller and
-an object to represent an axis.
+### Using the `Controller` object
+The `control` module provides an object-oriented interface to the controller, making
+code development more intuitive. 
 An example of its use:
 
 ```python
->>> from acspy.control import Controller, Axis
->>> controller = Controller("simulator")
+>>> from acspy.control import Controller
+>>> controller = Controller(contype="simulator", n_axes=4)
 >>> controller.connect()
->>> axis = Axis(controller, 0)
->>> axis.enable()
->>> axis.enabled
+>>> axis0 = controller.axes[0]
+>>> axis0.enable()
+>>> axis0.enabled
 True
+>>> axis0.ptp(500.5)
+>>> axis0.rpos
+500.5
+>>> axis0.disable()
 >>> controller.disconnect()
 ```
 

@@ -7,9 +7,11 @@ from __future__ import division, print_function
 from acspy import acsc
 
 class Controller(object):
-    def __init__(self, contype="simulator"):
+    def __init__(self, contype="simulator", n_axes=8):
         self.contype = contype
-        self.axisdefs = {}
+        self.axes = []
+        for n in range(n_axes):
+            self.axes.append(Axis(self, n))
         
     def connect(self, address="10.0.0.100", port=701):
         if self.contype == "simulator":
@@ -17,29 +19,15 @@ class Controller(object):
         elif self.contype == "ethernet":
             self.hc = acsc.openCommEthernetTCP(address=address, port=port)
 	
-    def enable_axis(self, axis, wait=acsc.SYNCHRONOUS):
-        if axis in self.axisdefs:
-            axis = self.axisdefs[axis]
-        acsc.enable(self.hc, axis, wait)
+    def enable_all(self, wait=acsc.SYNCHRONOUS):
+        """Enables all axes."""
+        for a in axes:
+            a.enable()
 
-    def disable_axis(self, axis, wait=acsc.SYNCHRONOUS):
-        if axis in self.axisdefs:
-            axis = self.axisdefs[axis]
-        acsc.disable(self.hc, axis, wait)
-            
-    def ptp(self, axis, target, flags=None, wait=acsc.SYNCHRONOUS):
-        if axis in self.axisdefs:
-            axis = self.axisdefs[axis]
-        acsc.toPoint(self.hc, flags, axis, target, wait)
-        
-    def rpos(self, axis):
-        if axis in self.axisdefs:
-            axis = self.axisdefs[axis]
-        return acsc.getRPosition(self.hc, axis)
-        
-    def axisdef(self, axis, axisname):
-        """Defines an alias to an axis."""
-        self.axisdefs[axisname] = axis
+    def disable_all(self, wait=acsc.SYNCHRONOUS):
+        """Disables all axes."""
+        for a in axes:
+            a.disable()
         
     def disconnect(self):
         acsc.closeComm(self.hc)
@@ -52,9 +40,14 @@ class Axis(object):
         else:
             raise TypeError("Controller is not a valid Controller object")
         self.axisno = axisno
+        if name:
+            controller.axisdefs[name] = axisno
         
     def enable(self, wait=acsc.SYNCHRONOUS):
         acsc.enable(self.controller.hc, self.axisno, wait)
+
+    def disable(self, wait=acsc.SYNCHRONOUS):
+        acsc.disable(self.controller.hc, self.axisno, wait)
         
     def ptp(self, target, coordinates="absolute", wait=acsc.SYNCHRONOUS):
         """Performs a point to point move in either relative or absolute
@@ -142,21 +135,21 @@ if __name__ == "__main__":
     controller = Controller("simulator")
     controller.connect()
     
-    axis0 = Axis(controller, 0)
+    x = controller.axes[0]
 
-    print(axis0.rpos)
+    print(x.rpos)
 
-    axis0.enable()
+    x.enable()
     
-    axis0.vel = 1000
-    axis0.acc = 100000
-    axis0.dec = 100000
+    x.vel = 1000
+    x.acc = 100000
+    x.dec = 100000
     
-    axis0.ptp(100000)
+    x.ptp(100000)
     time.sleep(1)
-    print(axis0.rpos)
-    print(axis0.acc)
-    print(axis0.dec)
+    print(x.rpos)
+    print(x.acc)
+    print(x.dec)
     
     controller.disconnect()
     
