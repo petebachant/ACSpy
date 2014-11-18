@@ -99,6 +99,13 @@ def setDeceleration(hcomm, axis, dec, wait=SYNCHRONOUS):
 def setJerk(hcomm, axis, jerk, wait=SYNCHRONOUS):
     acs.acsc_SetAcceleration(hcomm, axis, double(jerk), wait)
     
+def getMotorEnabled(hcomm, axis, wait=SYNCHRONOUS):
+    """Checks if motor is enabled."""
+    state = ctypes.c_int()
+    acs.acsc_GetMotorState(hcomm, axis, byref(state), wait)
+    state = state.value
+    return hex(state)[-1] == "1"
+    
 def getMotorState(hcomm, axis, wait=SYNCHRONOUS):
     """Gets the motor state. Returns a dictionary with the following keys:
       * "enabled"
