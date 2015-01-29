@@ -21,12 +21,12 @@ class Controller(object):
 	
     def enable_all(self, wait=acsc.SYNCHRONOUS):
         """Enables all axes."""
-        for a in axes:
+        for a in self.axes:
             a.enable()
 
     def disable_all(self, wait=acsc.SYNCHRONOUS):
         """Disables all axes."""
-        for a in axes:
+        for a in self.axes:
             a.disable()
         
     def disconnect(self):
@@ -127,29 +127,4 @@ class Axis(object):
     def dec(self, decel):
         """Sets axis velocity."""
         acsc.setDeceleration(self.controller.hc, self.axisno, decel)
-        
-
-if __name__ == "__main__":
-    import time
-    
-    controller = Controller("simulator")
-    controller.connect()
-    
-    x = controller.axes[0]
-
-    print(x.rpos)
-
-    x.enable()
-    
-    x.vel = 1000
-    x.acc = 100000
-    x.dec = 100000
-    
-    x.ptp(100000)
-    time.sleep(1)
-    print(x.rpos)
-    print(x.acc)
-    print(x.dec)
-    
-    controller.disconnect()
-    
+         

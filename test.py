@@ -8,3 +8,4 @@ from acspy import tests
 
 if __name__ == "__main__":
     tests.test_write_real()
+    tests.test_controller()
