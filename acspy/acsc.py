@@ -1,15 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed Apr 17 14:26:47 2013
+ACSC
+----
 
-@author: Pete Bachant
+This module is a wrapper for the ACS C library using ctypes
 
-This program is a wrapper for the ACS C library using ctypes
-
-To-do
------
-A lot of the functions need error handing added, i.e. they don't care what the 
-ACSC function returns.
 """
 from __future__ import division, print_function
 import ctypes
@@ -286,9 +281,12 @@ def readReal(hcomm, buffno, varname, from1=NONE, to1=NONE, from2=NONE,
     else:
         return values.value
         
-def writeReal():
+def writeReal(hcomm, varname, val_to_write, nbuff=NONE, from1=NONE, to1=NONE, 
+              from2=NONE, to2=NONE, wait=SYNCHRONOUS):
     """Writes a real value to the controller."""
-    pass
+    val = ctypes.c_double(val_to_write)
+    acs.acsc_WriteReal(hcomm, nbuff, varname, from1, to1,
+                       from2, to2, p(val), wait)
 
 def uploadDataFromController(hcomm, src, srcname, srcnumformat, from1, to1,
             from2, to2, destfilename, destnumformat, btranspose, wait=0):
