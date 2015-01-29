@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed Jan 28 21:56:54 2015
+This script runs the tests of the ACSpy package.
 
-@author: Pete
 """
 
 from acspy import tests
