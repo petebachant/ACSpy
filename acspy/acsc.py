@@ -91,7 +91,7 @@ def setDeceleration(hcomm, axis, dec, wait=SYNCHRONOUS):
     acs.acsc_SetDeceleration(hcomm, axis, double(dec), wait)
     
 def setJerk(hcomm, axis, jerk, wait=SYNCHRONOUS):
-    acs.acsc_SetAcceleration(hcomm, axis, double(jerk), wait)
+    acs.acsc_SetJerk(hcomm, axis, double(jerk), wait)
     
 def getMotorEnabled(hcomm, axis, wait=SYNCHRONOUS):
     """Checks if motor is enabled."""
