@@ -5,16 +5,9 @@ A Python package for working with ACS motion controllers.
 
 Installation
 ------------
-
-Either use `pip`:
+Execute
 
     pip install acspy
-
-Or install from this repository:
-
-    git clone https://github.com/petebachant/ACSpy
-    cd ACSpy
-    python setup.py install`
 
 Usage
 -----
