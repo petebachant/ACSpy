@@ -296,7 +296,7 @@ def uploadDataFromController(hcomm, src, srcname, srcnumformat, from1, to1,
 
 def loadBuffer(hcomm, buffnumber, program, count=512, wait=SYNCHRONOUS):
     """Load a buffer into the ACS controller."""
-    prgbuff = ctypes.create_string_buffer(str(program), count)
+    prgbuff = ctypes.create_string_buffer(program.encode(), count)
     rv = acs.acsc_LoadBuffer(hcomm, buffnumber, byref(prgbuff), count, wait)
     errorHandling(rv)
     
