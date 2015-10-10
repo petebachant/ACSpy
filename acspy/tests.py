@@ -22,7 +22,7 @@ def test_write_real():
 
 
 def test_controller():
-    """Tests the Controller object."""
+    """Test the Controller object."""
     print("Testing the Controller object")
     controller = control.Controller("simulator")
     controller.connect()
@@ -44,10 +44,14 @@ def test_controller():
 def test_upload_prg():
     """Test that a program can be uploaded and run in the simulator."""
     hc = acsc.openCommDirect()
-    txt = "VEL(0) = 1.33\nSTOP"
-    acsc.loadBuffer(hc, 19, txt, 512)
+    txt = "enable 0\nVEL(0) = 1333\nptp 0, 1.33\nSTOP"
+    acsc.loadBuffer(hc, 19, txt, 64)
     acsc.runBuffer(hc, 19)
+    time.sleep(0.2)
     vel = acsc.getVelocity(hc, 0)
+    pos = acsc.getRPosition(hc, 0)
+    print("Position:", pos)
     print("Velocity:", vel)
-    assert vel == 1.33
+    assert vel == 1333.0
+    assert pos == 1.33
     acsc.closeComm(hc)
