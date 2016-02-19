@@ -227,7 +227,7 @@ def getLastError():
 def runBuffer(hcomm, buffno, label=None, wait=SYNCHRONOUS):
     """Runs a buffer in the controller."""
     if label is not None:
-        label=label.encode(encoding='utf_8', errors='strict')
+        label=label.encode()
     acs.acsc_RunBuffer(hcomm, int32(buffno), label, wait)
 
 def stopBuffer(hcomm, buffno, wait=SYNCHRONOUS):
@@ -246,22 +246,22 @@ def halt(hcomm, axis, wait=SYNCHRONOUS):
 
 def declareVariable(hcomm, vartype, varname, wait=SYNCHRONOUS):
     """Declare a variable in the controller."""
-    acs.acsc_DeclareVariable(hcomm, vartype, varname.encode(encoding='utf_8', errors='strict'), wait)
+    acs.acsc_DeclareVariable(hcomm, vartype, varname.encode(), wait)
 
 def readInteger(hcomm, buffno, varname, from1=None, to1=None, from2=None,
                 to2=None, wait=SYNCHRONOUS):
     """Reads an integer(s) in the controller."""
     intread = ctypes.c_int()
-    acs.acsc_ReadInteger(hcomm, buffno, varname.encode(encoding='utf_8', errors='strict'), from1, to1, from2, to2,
-                         p(intread), wait)
+    acs.acsc_ReadInteger(hcomm, buffno, varname.encode(), from1, to1, from2,
+                         to2, p(intread), wait)
     return intread.value
 
 def writeInteger(hcomm, variable, val_to_write, nbuff=NONE, from1=NONE,
                  to1=NONE, from2=NONE, to2=NONE, wait=SYNCHRONOUS):
     """Writes an integer variable to the controller."""
     val = ctypes.c_int(val_to_write)
-    acs.acsc_WriteInteger(hcomm, nbuff, variable.encode(encoding='utf_8', errors='strict'), from1, to1,
-                 from2, to2, p(val), wait)
+    acs.acsc_WriteInteger(hcomm, nbuff, variable.encode(), from1, to1,
+                          from2, to2, p(val), wait)
 
 def readReal(hcomm, buffno, varname, from1=NONE, to1=NONE, from2=NONE,
              to2=NONE, wait=SYNCHRONOUS):
@@ -286,7 +286,7 @@ def writeReal(hcomm, varname, val_to_write, nbuff=NONE, from1=NONE, to1=NONE,
               from2=NONE, to2=NONE, wait=SYNCHRONOUS):
     """Writes a real value to the controller."""
     val = ctypes.c_double(val_to_write)
-    acs.acsc_WriteReal(hcomm, nbuff, varname.encode(encoding='utf_8', errors='strict'), from1, to1,
+    acs.acsc_WriteReal(hcomm, nbuff, varname.encode(), from1, to1,
                        from2, to2, p(val), wait)
 
 def uploadDataFromController(hcomm, src, srcname, srcnumformat, from1, to1,
@@ -298,13 +298,13 @@ def uploadDataFromController(hcomm, src, srcname, srcnumformat, from1, to1,
 
 def loadBuffer(hcomm, buffnumber, program, count=512, wait=SYNCHRONOUS):
     """Load a buffer into the ACS controller."""
-    prgbuff = ctypes.create_string_buffer(str(program).encode(encoding='utf_8', errors='strict'), count)
+    prgbuff = ctypes.create_string_buffer(str(program).encode(), count)
     rv = acs.acsc_LoadBuffer(hcomm, buffnumber, byref(prgbuff), count, wait)
     errorHandling(rv)
 
 
 def loadBuffersFromFile(hcomm, filename, wait=SYNCHRONOUS):
-    rv = acs.acsc_LoadBuffersFromFile(hcomm, filename.encode(encoding='utf_8', errors='strict'), wait)
+    rv = acs.acsc_LoadBuffersFromFile(hcomm, filename.encode(), wait)
     errorHandling(rv)
 
 
