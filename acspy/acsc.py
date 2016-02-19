@@ -275,7 +275,7 @@ def readReal(hcomm, buffno, varname, from1=NONE, to1=NONE, from2=NONE,
     else:
         values = double()
         pointer = byref(values)
-    acs.acsc_ReadReal(hcomm, buffno, varname.encode(encoding='utf_8', errors='strict'), from1, to1, from2, to2,
+    acs.acsc_ReadReal(hcomm, buffno, varname.encode(), from1, to1, from2, to2,
                       pointer, wait)
     if from1 != NONE:
         return values
