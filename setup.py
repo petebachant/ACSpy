@@ -15,7 +15,7 @@ setup(
     packages=['acspy'],
     scripts=[],
     url='https://github.com/petebachant/ACSpy.git',
-    license='GPL v3',
+    license='MIT',
     description='Package for working with ACS motion controllers.',
     long_description=open('README.md').read(),
     classifiers=[
