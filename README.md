@@ -1,14 +1,22 @@
 ACSpy
 =====
 
-A Python package for working with ACS motion controllers.
+A Python package for working with [ACS motion controllers](https://www.acsmotioncontrol.com/). Note that this project is not 
+affiliated with or endorsed by ACS Motion Control. 
 
 
 Installation
 ------------
-Execute
+
+Note that the ACS motion control SPiiPlus User-Mode Driver must be installed and running. Contact ACS to obtain this software.
+
+This Python package can be installed from PyPI via `pip` with
 
     pip install acspy
+    
+To install from the source, clone locally and execute
+
+    python setup.py install
 
 
 Usage
