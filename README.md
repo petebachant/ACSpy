@@ -1,7 +1,8 @@
 ACSpy
 =====
 
-A Python package for working with ACS motion controllers.
+A Python package for working with [ACS motion controllers](https://www.acsmotioncontrol.com/). Note that this project is not 
+affiliated with or endorsed by ACS Motion Control. 
 
 
 Installation
