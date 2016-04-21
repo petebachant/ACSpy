@@ -79,6 +79,13 @@ class Axis(object):
     @property
     def enabled(self):
         return self.motor_state["enabled"]
+    
+    @enabled.setter
+    def enabled(self, choice):
+        if choice == True:
+            self.enable()
+        elif choice == False:
+            self.disable()
         
     @property
     def in_position(self):
