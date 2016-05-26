@@ -75,7 +75,7 @@ def openCommDirect():
 def openCommEthernetTCP(address="10.0.0.100", port=701):
     """Address is a string. Port is an int.
     Returns communication handle."""
-    hcomm = acs.acsc_OpenCommEthernetTCP(address, port)
+    hcomm = acs.acsc_OpenCommEthernetTCP(address.encode(), port)
     return hcomm
 
 def setVelocity(hcomm, axis, vel, wait=SYNCHRONOUS):
