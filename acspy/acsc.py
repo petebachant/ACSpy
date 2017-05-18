@@ -6,7 +6,7 @@ ACSC
 This module is a wrapper for the ACS C library using ctypes
 
 """
-
+from __future__ import division, print_function
 import ctypes
 from ctypes import byref
 from acspy.errors import errors

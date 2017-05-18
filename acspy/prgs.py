@@ -8,7 +8,7 @@ This module contains functions for generating ACSPL+ programs
 
 """
 
-
+from __future__ import division, print_function
 class ACSPLplusPrg(object):
     def __init__(self):
         self.txt = ""
