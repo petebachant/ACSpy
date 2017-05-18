@@ -12,6 +12,8 @@ It's a good idea to keep the data buffer length dblen at least half the
 sample rate sr. 
 
 """
+
+from __future__ import division, print_function
 from acspy import acsc, prgs
 import numpy as np
 import time
@@ -37,7 +39,7 @@ prg.addline("global real foo")
 prg.addline("foo = 6.5")
 prg.addline("ENABLE 0")
 prg.add_dc("data", dblen, sr, "TIME, FVEL(0)", "/c")
-for n in xrange(3):
+for n in range(3):
     prg.addptp(0, 10000, "/e")
     prg.addptp(0, 0, "/e")
 prg.addline("WAIT 10000")
@@ -51,10 +53,10 @@ acsc.runBuffer(hc, 0)
 astate = acsc.getAxisState(hc, 0)
 #print astate
 
-for n in xrange(3):
+for n in range(3):
     time.sleep(sleeptime)
     newdata = acsc.readReal(hc, acsc.NONE, "data", 0, 1, 0, dblen/2-1)
-    print acsc.readInteger(hc, acsc.NONE, "S_DCN")
+    print(acsc.readInteger(hc, acsc.NONE, "S_DCN"))
     t = np.append(t, newdata[0])
     data = np.append(data, newdata[1])
     time.sleep(sleeptime)
@@ -62,7 +64,7 @@ for n in xrange(3):
     t = np.append(t, newdata[0])
     data = np.append(data, newdata[1])
 
-print acsc.readReal(hc, acsc.NONE, "foo")
+print(acsc.readReal(hc, acsc.NONE, "foo"))
 acsc.printLastError()
 acsc.closeComm(hc)
 

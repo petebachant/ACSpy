@@ -6,6 +6,8 @@ This file calls function from the ACS C library wrapper
 
 @author: Pete
 """
+
+from __future__ import division, print_function
 import numpy as np
 import matplotlib.pyplot as plt
 import acsc
@@ -23,7 +25,7 @@ target = 2
 hc = acsc.OpenCommDirect()
 
 if hc == acsc.INVALID:
-    print "Cannot connect to controller, error", acsc.GetLastError()
+    print("Cannot connect to controller, error", acsc.GetLastError())
 
 else:    
     acsc.Enable(hc, axis)
@@ -49,13 +51,13 @@ else:
         pvec.append(position)
         tvec.append(time.time())
         
-        print "Axis", axis, "is", acsc.GetAxisState(hc, axis)
+        print("Axis", axis, "is", acsc.GetAxisState(hc, axis))
 
     
     pvec = np.asarray(pvec)
     tvec = np.asarray(tvec) - tvec[0]
     
-    print "Generating plot"
+    print("Generating plot")
     plt.close('all')
     plt.plot(tvec, pvec)   
     

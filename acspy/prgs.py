@@ -7,7 +7,9 @@ Created on Wed Aug 14 21:13:07 2013
 This module contains functions for generating ACSPL+ programs
 
 """
-from __future__ import print_function
+
+from __future__ import division, print_function
+
 
 class ACSPLplusPrg(object):
     def __init__(self):
