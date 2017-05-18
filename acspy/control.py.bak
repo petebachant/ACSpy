@@ -3,7 +3,7 @@
 This module contains an [incomplete] object for communicating with an ACS controller.
 
 """
-
+from __future__ import division, print_function
 from acspy import acsc
 
 class Controller(object):

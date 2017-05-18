@@ -2,7 +2,7 @@
 """
 This module contains tests for the ACSpy package.
 """
-
+from __future__ import division, print_function
 from acspy import acsc, control
 import time
 

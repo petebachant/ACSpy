@@ -9,6 +9,6 @@ from acspy import acsc
 
 hc = acsc.openCommDirect()
 
-print(acsc.readReal(hc, acsc.NONE, "FPOS(0)"))
+print acsc.readReal(hc, acsc.NONE, "FPOS(0)")
 
 acsc.closeComm(hc)
