@@ -12,6 +12,8 @@ It's a good idea to keep the data buffer length dblen at least half the
 sample rate sr. 
 
 """
+
+from __future__ import division, print_function
 from acspy import acsc, prgs
 import numpy as np
 import time
