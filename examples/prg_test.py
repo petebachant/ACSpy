@@ -2,6 +2,8 @@
 This is a test for generating an ACSPL+ program
 then uploading it to the controller and running it.
 """
+
+from __future__ import division, print_function
 from acspy import acsc
 import time
 
