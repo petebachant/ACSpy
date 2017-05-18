@@ -6,6 +6,8 @@ This file calls function from the ACS C library wrapper
 
 @author: Pete
 """
+
+from __future__ import division, print_function
 import numpy as np
 import matplotlib.pyplot as plt
 import acsc
