@@ -74,7 +74,7 @@ DEFAULT = -1
 INFINITE = -1
 
 ax_mflags = {
-        'DUMMY': 0,
+    "DUMMY": 0,
         'OPEN': 1,
         'MICRO': 2,
         'HOME': 3,
