@@ -241,7 +241,6 @@ def toPointM(hcomm, flags, axes, target, wait=SYNCHRONOUS):
     are entered as tuples. Set flags as None for absolute coordinates."""
     if len(axes) != len(target):
         raise AcscError("Number of axes and coordinates don't match!")
-
     target_array = double*len(axes)
     axes_array = ctypes.c_int*(len(axes) + 1)
     target_c = target_array()
