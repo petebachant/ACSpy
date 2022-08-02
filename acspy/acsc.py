@@ -15,8 +15,7 @@ import re
 
 
 class AcscError(Exception):
-    def __init__(self, *args, **kwargs):
-        Exception.__init__(self, *args, **kwargs)
+    pass
 
 
 # Import the ACS C library DLL
