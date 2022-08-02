@@ -20,9 +20,9 @@ class AcscError(Exception):
 
 # Import the ACS C library DLL
 if platform.architecture()[0] == "32bit":
-    acs = ctypes.windll.LoadLibrary('ACSCL_x86.dll')
+    acs = ctypes.windll.LoadLibrary("ACSCL_x86.dll")
 if platform.architecture()[0] == "64bit":
-    acs = ctypes.windll.LoadLibrary('ACSCL_x64.dll')
+    acs = ctypes.windll.LoadLibrary("ACSCL_x64.dll")
 
 int32 = ctypes.c_long
 uInt32 = ctypes.c_ulong
@@ -74,37 +74,37 @@ INFINITE = -1
 
 ax_mflags = {
     "DUMMY": 0,
-        'OPEN': 1,
-        'MICRO': 2,
-        'HOME': 3,
-        'STEPPER': 4,
-        'ENCLOOP': 5,
-        'STEPENC': 6,
-        'NANO': 7,
-        'BRUSHL': 8,
-        'BRUSHOK': 9,
-        'PHASE2': 10,
-        'DBRAKE': 11,
-        'INVENC': 12,
-        'INVDOUT': 13,
-        'NOTCH': 14,
-        'NOFILT': 15,
-        'BI_QUAD': 16,
-        'DEFCON': 17,
-        'FASTSC': 18,
-        'ENMOD': 19,
-        'DUALLOOP': 20,
-        'LINEAR': 21,
-        'ABSCOMM': 22,
-        'BRAKE': 23,
-        'HSSI': 24,
-        'GANTRY': 25,
-        'BI_QUAD1': 26,
-        'HALL': 27,
-        'INVHALL': 28,
-        'MODULO': 29,
-        'USER1': 30,
-        'USER2': 31
+    "OPEN": 1,
+    "MICRO": 2,
+    "HOME": 3,
+    "STEPPER": 4,
+    "ENCLOOP": 5,
+    "STEPENC": 6,
+    "NANO": 7,
+    "BRUSHL": 8,
+    "BRUSHOK": 9,
+    "PHASE2": 10,
+    "DBRAKE": 11,
+    "INVENC": 12,
+    "INVDOUT": 13,
+    "NOTCH": 14,
+    "NOFILT": 15,
+    "BI_QUAD": 16,
+    "DEFCON": 17,
+    "FASTSC": 18,
+    "ENMOD": 19,
+    "DUALLOOP": 20,
+    "LINEAR": 21,
+    "ABSCOMM": 22,
+    "BRAKE": 23,
+    "HSSI": 24,
+    "GANTRY": 25,
+    "BI_QUAD1": 26,
+    "HALL": 27,
+    "INVHALL": 28,
+    "MODULO": 29,
+    "USER1": 30,
+    "USER2": 31,
 }
 
 
@@ -115,11 +115,15 @@ def openCommDirect():
     if hcomm == -1:
         err = getLastError()
         err_lng = int32()
-        if acs.acsc_GetErrorString(hcomm, int32(err), s,
-                                   int32(ctypes.sizeof(s)), byref(err_lng)) != 0:
+        if (
+            acs.acsc_GetErrorString(
+                hcomm, int32(err), s, int32(ctypes.sizeof(s)), byref(err_lng)
+            )
+            != 0
+        ):
             s[err_lng.value] = 0
-            err_str = s.value.decode('ascii')
-            raise AcscError(str(err) + ': ' + err_str)
+            err_str = s.value.decode("ascii")
+            raise AcscError(str(err) + ": " + err_str)
         else:
             raise AcscError(err)
 
@@ -133,11 +137,15 @@ def openCommEthernetTCP(address="10.0.0.100", port=701):
     if hcomm == -1:
         err = getLastError()
         err_lng = int32()
-        if acs.acsc_GetErrorString(hcomm, int32(err), s,
-                                   int32(ctypes.sizeof(s)), byref(err_lng)) != 0:
+        if (
+            acs.acsc_GetErrorString(
+                hcomm, int32(err), s, int32(ctypes.sizeof(s)), byref(err_lng)
+            )
+            != 0
+        ):
             s[err_lng.value] = 0
-            err_str = s.value.decode('ascii')
-            raise AcscError(str(err) + ': ' + err_str)
+            err_str = s.value.decode("ascii")
+            raise AcscError(str(err) + ": " + err_str)
         else:
             raise AcscError(err)
 
@@ -178,45 +186,49 @@ def getMotorEnabled(hcomm, axis, wait=SYNCHRONOUS):
 
 def getMotorState(hcomm, axis, wait=SYNCHRONOUS):
     """Gets the motor state. Returns a dictionary with the following keys:
-      * "enabled"
-      * "in position"
-      * "moving"
-      * "accelerating"
+    * "enabled"
+    * "in position"
+    * "moving"
+    * "accelerating"
     """
     state = ctypes.c_int()
     call_acsc(acs.acsc_GetMotorState, hcomm, axis, byref(state), wait)
     state = state.value
-    mst = {"enabled": hex(state)[-1] == "1",
-           "in position": hex(state)[-2] == "1",
-           "moving": hex(state)[-2] == "2",
-           "accelerating": hex(state)[-2] == "4"}
+    mst = {
+        "enabled": hex(state)[-1] == "1",
+        "in position": hex(state)[-2] == "1",
+        "moving": hex(state)[-2] == "2",
+        "accelerating": hex(state)[-2] == "4",
+    }
     return mst
 
 
 def getAxisState(hcomm, axis, wait=SYNCHRONOUS):
     """Gets the axis state. Returns a dictionary with the following keys
-      * "lead"
-      * "DC"
-      * "PEG"
-      * "PEGREADY"
-      * "moving"
-      * "accelerating"
-      * "segment"
-      * "vel lock"
-      * "pos lock"
-     """
+    * "lead"
+    * "DC"
+    * "PEG"
+    * "PEGREADY"
+    * "moving"
+    * "accelerating"
+    * "segment"
+    * "vel lock"
+    * "pos lock"
+    """
     state = ctypes.c_int()
     call_acsc(acs.acsc_GetAxisState, hcomm, axis, byref(state), wait)
     state = state.value
-    ast = {"lead": hex(state)[-1] == "1",
-           "DC": hex(state)[-1] == "2",
-           "PEG": hex(state)[-1] == "4",
-           "PEGREADY": hex(state)[-2] == "1",
-           "moving": hex(state)[-2] == "2",
-           "accelerating": hex(state)[-2] == "4",
-           "segment": hex(state)[-2] == "8",
-           "vel lock": hex(state)[-3] == "1",
-           "pos lock": hex(state)[-3] == "2"}
+    ast = {
+        "lead": hex(state)[-1] == "1",
+        "DC": hex(state)[-1] == "2",
+        "PEG": hex(state)[-1] == "4",
+        "PEGREADY": hex(state)[-2] == "1",
+        "moving": hex(state)[-2] == "2",
+        "accelerating": hex(state)[-2] == "4",
+        "segment": hex(state)[-2] == "8",
+        "vel lock": hex(state)[-3] == "1",
+        "pos lock": hex(state)[-3] == "2",
+    }
     return ast
 
 
@@ -240,8 +252,8 @@ def toPointM(hcomm, flags, axes, target, wait=SYNCHRONOUS):
     are entered as tuples. Set flags as None for absolute coordinates."""
     if len(axes) != len(target):
         raise AcscError("Number of axes and coordinates don't match!")
-    target_array = double*len(axes)
-    axes_array = ctypes.c_int*(len(axes) + 1)
+    target_array = double * len(axes)
+    axes_array = ctypes.c_int * (len(axes) + 1)
     target_c = target_array()
     axes_c = axes_array()
     for n in range(len(axes)):
@@ -255,10 +267,23 @@ def enable(hcomm, axis, wait=SYNCHRONOUS):
     call_acsc(acs.acsc_Enable, hcomm, int32(axis), wait)
 
 
-def commutate(hcomm, axis, current=DEFAULT, settle=DEFAULT,
-              slope=DEFAULT, wait=SYNCHRONOUS):
-    call_acsc(acs.acsc_CommutExt, hcomm, int32(axis), float_(current),
-              int32(settle), int32(slope), wait)
+def commutate(
+    hcomm,
+    axis,
+    current=DEFAULT,
+    settle=DEFAULT,
+    slope=DEFAULT,
+    wait=SYNCHRONOUS,
+):
+    call_acsc(
+        acs.acsc_CommutExt,
+        hcomm,
+        int32(axis),
+        float_(current),
+        int32(settle),
+        int32(slope),
+        wait,
+    )
 
 
 def waitCommutated(hcomm, axis, timeout=INFINITE):
@@ -266,8 +291,9 @@ def waitCommutated(hcomm, axis, timeout=INFINITE):
 
     Default timeout is 30 seconds.
     """
-    call_acsc(acs.acsc_WaitMotorCommutated, hcomm, int32(axis), 1,
-              int32(timeout))
+    call_acsc(
+        acs.acsc_WaitMotorCommutated, hcomm, int32(axis), 1, int32(timeout)
+    )
 
 
 def disable(hcomm, axis, wait=SYNCHRONOUS):
@@ -352,7 +378,7 @@ def stopBuffer(hcomm, buffno, wait=SYNCHRONOUS):
 
 
 def waitProgramEnd(hcomm, buffno, timeout=INFINITE):
-    """ Wait for program in buffer buffno to finish """
+    """Wait for program in buffer buffno to finish"""
     call_acsc(acs.acsc_WaitProgramEnd, hcomm, int32(buffno), int32(timeout))
 
 
@@ -373,84 +399,182 @@ def declareVariable(hcomm, vartype, varname, wait=SYNCHRONOUS):
     call_acsc(acs.acsc_DeclareVariable, hcomm, vartype, varname.encode(), wait)
 
 
-def readInteger(hcomm, buffno, varname, from1=None, to1=None, from2=None,
-                to2=None, wait=SYNCHRONOUS):
+def readInteger(
+    hcomm,
+    buffno,
+    varname,
+    from1=None,
+    to1=None,
+    from2=None,
+    to2=None,
+    wait=SYNCHRONOUS,
+):
     """Reads an integer(s) in the controller."""
     intread = ctypes.c_int()
-    call_acsc(acs.acsc_ReadInteger, hcomm, buffno, varname.encode(), from1,
-              to1, from2, to2, p(intread), wait)
+    call_acsc(
+        acs.acsc_ReadInteger,
+        hcomm,
+        buffno,
+        varname.encode(),
+        from1,
+        to1,
+        from2,
+        to2,
+        p(intread),
+        wait,
+    )
     return intread.value
 
 
-def writeInteger(hcomm, variable, val_to_write, nbuff=NONE, from1=NONE,
-                 to1=NONE, from2=NONE, to2=NONE, wait=SYNCHRONOUS):
+def writeInteger(
+    hcomm,
+    variable,
+    val_to_write,
+    nbuff=NONE,
+    from1=NONE,
+    to1=NONE,
+    from2=NONE,
+    to2=NONE,
+    wait=SYNCHRONOUS,
+):
     """Writes an integer variable to the controller."""
     val = ctypes.c_int(val_to_write)
-    call_acsc(acs.acsc_WriteInteger, hcomm, nbuff, variable.encode(), from1,
-              to1, from2, to2, p(val), wait)
+    call_acsc(
+        acs.acsc_WriteInteger,
+        hcomm,
+        nbuff,
+        variable.encode(),
+        from1,
+        to1,
+        from2,
+        to2,
+        p(val),
+        wait,
+    )
 
 
 def readMflag(hcomm, axis, flag_nm):
-    """read a Mflag. For definition refer to ax_mflags at the top """
-    allFlags = readInteger(hcomm, None, 'MFLAGS', axis, axis + 1)
+    """read a Mflag. For definition refer to ax_mflags at the top"""
+    allFlags = readInteger(hcomm, None, "MFLAGS", axis, axis + 1)
     return bool(((1 << ax_mflags[flag_nm]) & allFlags))
 
 
 def setMflag(hcomm, axis, flag_nm):
-    """Set a Mflag. For definition refer to ax_mflags at the top """
-    allFlags = readInteger(hcomm, None, 'MFLAGS', axis, axis + 1)
-    allFlags |= 2**(ax_mflags[flag_nm])
-    writeInteger(hcomm, 'MFLAGS', allFlags)
+    """Set a Mflag. For definition refer to ax_mflags at the top"""
+    allFlags = readInteger(hcomm, None, "MFLAGS", axis, axis + 1)
+    allFlags |= 2 ** (ax_mflags[flag_nm])
+    writeInteger(hcomm, "MFLAGS", allFlags)
 
 
 def clearMflag(hcomm, axis, flag_nm):
-    """Clear a Mflag. For definition refer to ax_mflags at the top """
-    allFlags = readInteger(hcomm, None, 'MFLAGS', axis, axis + 1)
-    allFlags &= ~(2**(ax_mflags[flag_nm]))
-    writeInteger(hcomm, 'MFLAGS', allFlags)
+    """Clear a Mflag. For definition refer to ax_mflags at the top"""
+    allFlags = readInteger(hcomm, None, "MFLAGS", axis, axis + 1)
+    allFlags &= ~(2 ** (ax_mflags[flag_nm]))
+    writeInteger(hcomm, "MFLAGS", allFlags)
 
 
-def readReal(hcomm, buffno, varname, from1=NONE, to1=NONE, from2=NONE,
-             to2=NONE, wait=SYNCHRONOUS):
+def readReal(
+    hcomm,
+    buffno,
+    varname,
+    from1=NONE,
+    to1=NONE,
+    from2=NONE,
+    to2=NONE,
+    wait=SYNCHRONOUS,
+):
     """Read real variable (scalar or array) from the controller."""
     if from2 == NONE and to2 == NONE and from1 != NONE:
-        values = np.zeros((to1-from1+1), dtype=np.float64)
+        values = np.zeros((to1 - from1 + 1), dtype=np.float64)
         pointer = values.ctypes.data
     elif from2 != NONE:
-        values = np.zeros((to1-from1+1, to2-from2+1), dtype=np.float64)
+        values = np.zeros((to1 - from1 + 1, to2 - from2 + 1), dtype=np.float64)
         pointer = values.ctypes.data
     else:
         values = double()
         pointer = byref(values)
-    call_acsc(acs.acsc_ReadReal, hcomm, buffno, varname.encode(), from1, to1,
-              from2, to2, pointer, wait)
+    call_acsc(
+        acs.acsc_ReadReal,
+        hcomm,
+        buffno,
+        varname.encode(),
+        from1,
+        to1,
+        from2,
+        to2,
+        pointer,
+        wait,
+    )
     if from1 != NONE:
         return values
     else:
         return values.value
 
 
-def writeReal(hcomm, varname, val_to_write, nbuff=NONE, from1=NONE, to1=NONE,
-              from2=NONE, to2=NONE, wait=SYNCHRONOUS):
+def writeReal(
+    hcomm,
+    varname,
+    val_to_write,
+    nbuff=NONE,
+    from1=NONE,
+    to1=NONE,
+    from2=NONE,
+    to2=NONE,
+    wait=SYNCHRONOUS,
+):
     """Writes a real value to the controller."""
     val = ctypes.c_double(val_to_write)
-    call_acsc(acs.acsc_WriteReal, hcomm, nbuff, varname.encode(), from1, to1,
-              from2, to2, p(val), wait)
+    call_acsc(
+        acs.acsc_WriteReal,
+        hcomm,
+        nbuff,
+        varname.encode(),
+        from1,
+        to1,
+        from2,
+        to2,
+        p(val),
+        wait,
+    )
 
 
-def uploadDataFromController(hcomm, src, srcname, srcnumformat, from1, to1,
-                             from2, to2, destfilename, destnumformat,
-                             btranspose, wait=0):
-    call_acsc(acs.acsc_UploadDataFromController, hcomm, src, srcname,
-              srcnumformat, from1, to1, from2, to2, destfilename,
-              destnumformat, btranspose, wait)
+def uploadDataFromController(
+    hcomm,
+    src,
+    srcname,
+    srcnumformat,
+    from1,
+    to1,
+    from2,
+    to2,
+    destfilename,
+    destnumformat,
+    btranspose,
+    wait=0,
+):
+    call_acsc(
+        acs.acsc_UploadDataFromController,
+        hcomm,
+        src,
+        srcname,
+        srcnumformat,
+        from1,
+        to1,
+        from2,
+        to2,
+        destfilename,
+        destnumformat,
+        btranspose,
+        wait,
+    )
 
 
 def loadBuffer(hcomm, buffnumber, program, count=512, wait=SYNCHRONOUS):
     """Load a buffer into the ACS controller."""
     prgbuff = ctypes.create_string_buffer(str(program).encode(), count)
-    call_acsc(acs.acsc_LoadBuffer, hcomm, buffnumber, byref(prgbuff), count,
-              wait)
+    call_acsc(
+        acs.acsc_LoadBuffer, hcomm, buffnumber, byref(prgbuff), count, wait
+    )
 
 
 def loadBuffersFromFile(hcomm, filename, wait=SYNCHRONOUS):
@@ -462,26 +586,26 @@ def loadBuffersFromFile(hcomm, filename, wait=SYNCHRONOUS):
     with open(filename) as file:
         rawline = file.readline()
         line = rawline.replace(" ", "").upper()  # strip all spaces, cnv. upper
-        if line[:7] == "#HEADER":                             # skip the header
+        if line[:7] == "#HEADER":  # skip the header
             rawline = file.readline()
 
-        while rawline:                           # read lines until end of file
+        while rawline:  # read lines until end of file
             line = rawline.replace(" ", "").upper()
             matchres = re.match("#BUF([0-9]*)", line)  # match #BUF & fol. nums
             if matchres:
-                if currbuffer:                         # if buffer is not empty
+                if currbuffer:  # if buffer is not empty
                     progs[currbuffer] = currprg.encode("ascii")
                     currprg = ""
-                currbuffer = int(matchres.groups()[0])          # assign buffer
+                currbuffer = int(matchres.groups()[0])  # assign buffer
                 rawline = file.readline()
             else:
                 currprg += rawline
                 rawline = file.readline()
 
-    if currbuffer:                             # do not forget to add lasf prog
+    if currbuffer:  # do not forget to add lasf prog
         progs[currbuffer] = currprg
 
-    for key in progs:                                        # load all buffers
+    for key in progs:  # load all buffers
         loadBuffer(hcomm, key, progs[key])
 
 
@@ -494,13 +618,21 @@ def spline(hcomm, flags, axis, period, wait=SYNCHRONOUS):
 
 
 def addPVPoint(hcomm, axis, point, velocity, wait=SYNCHRONOUS):
-    call_acsc(acs.acsc_AddPVPoint, hcomm, axis, double(point),
-              double(velocity), wait)
+    call_acsc(
+        acs.acsc_AddPVPoint, hcomm, axis, double(point), double(velocity), wait
+    )
 
 
 def addPVTPoint(hcomm, axis, point, velocity, dt, wait=SYNCHRONOUS):
-    call_acsc(acs.acsc_AddPVTPoint, hcomm, axis, double(point),
-              double(velocity), double(dt), wait)
+    call_acsc(
+        acs.acsc_AddPVTPoint,
+        hcomm,
+        axis,
+        double(point),
+        double(velocity),
+        double(dt),
+        wait,
+    )
 
 
 def multiPoint(hcomm, flags, axis, dwell, wait=SYNCHRONOUS):
@@ -512,8 +644,9 @@ def addPoint(hcomm, axis, point, wait=SYNCHRONOUS):
 
 
 def extAddPoint(hcomm, axis, point, rate, wait=SYNCHRONOUS):
-    call_acsc(acs.acsc_ExtAddPoint, hcomm, axis, double(point), double(rate),
-              wait)
+    call_acsc(
+        acs.acsc_ExtAddPoint, hcomm, axis, double(point), double(rate), wait
+    )
 
 
 def endSequence(hcomm, axis, wait=SYNCHRONOUS):
@@ -536,17 +669,21 @@ def setOutput(hcomm, port, bit, val, wait=SYNCHRONOUS):
     call_acsc(acs.acsc_SetOutput, hcomm, port, bit, val, wait)
 
 
-def call_acsc(func, *args, **kwargs):     # wrap acs lib calls to handle errors
+def call_acsc(func, *args, **kwargs):  # wrap acs lib calls to handle errors
     rv = func(*args, **kwargs)
-    if rv == 0:                                           # there was an error!
-        err = acs.acsc_GetLastError()                     # retrieve error code
+    if rv == 0:  # there was an error!
+        err = acs.acsc_GetLastError()  # retrieve error code
         err_lng = int32()
         hc = args[0]
-        if acs.acsc_GetErrorString(hc, int32(err), s, int32(ctypes.sizeof(s)),
-                                   byref(err_lng)) != 0:
-            s[err_lng.value] = b'\x00'
-            err_str = s.value.decode('ascii')
-            raise AcscError(str(err) + ': ' + err_str)
+        if (
+            acs.acsc_GetErrorString(
+                hc, int32(err), s, int32(ctypes.sizeof(s)), byref(err_lng)
+            )
+            != 0
+        ):
+            s[err_lng.value] = b"\x00"
+            err_str = s.value.decode("ascii")
+            raise AcscError(str(err) + ": " + err_str)
         else:
             raise AcscError(err)
     return rv
