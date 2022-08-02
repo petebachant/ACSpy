@@ -469,7 +469,7 @@ def loadBuffersFromFile(hcomm, filename, wait=SYNCHRONOUS):
 
         while rawline:                           # read lines until end of file
             line = rawline.replace(" ", "").upper()
-            matchres = re.match('#BUF([0-9]*)', line)  # match #BUF & fol. nums
+            matchres = re.match("#BUF([0-9]*)", line)  # match #BUF & fol. nums
             if matchres:
                 if currbuffer:                         # if buffer is not empty
                     progs[currbuffer] = currprg.encode('ascii')
