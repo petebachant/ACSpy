@@ -265,7 +265,8 @@ def commutate(hcomm, axis, current=DEFAULT, settle=DEFAULT,
 
 def waitCommutated(hcomm, axis, timeout=INFINITE):
     """Wait for commutation to finish.
-    default timeout = 30sec
+
+    Default timeout is 30 seconds.
     """
     call_acsc(acs.acsc_WaitMotorCommutated, hcomm, int32(axis), 1,
               int32(timeout))
