@@ -106,7 +106,7 @@ ax_mflags = {
         'MODULO': 29,
         'USER1': 30,
         'USER2': 31
-        }
+}
 
 
 def openCommDirect():
