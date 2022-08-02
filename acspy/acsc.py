@@ -126,7 +126,6 @@ def openCommDirect():
             raise AcscError(str(err) + ": " + err_str)
         else:
             raise AcscError(err)
-
     return hcomm
 
 
