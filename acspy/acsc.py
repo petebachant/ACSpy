@@ -464,7 +464,7 @@ def loadBuffersFromFile(hcomm, filename, wait=SYNCHRONOUS):
     with open(filename) as file:
         rawline = file.readline()
         line = rawline.replace(" ", "").upper()  # strip all spaces, cnv. upper
-        if line[:7] == '#HEADER':                             # skip the header
+        if line[:7] == "#HEADER":                             # skip the header
             rawline = file.readline()
 
         while rawline:                           # read lines until end of file
