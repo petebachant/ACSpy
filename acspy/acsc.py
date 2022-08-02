@@ -457,7 +457,7 @@ def loadBuffer(hcomm, buffnumber, program, count=512, wait=SYNCHRONOUS):
 
 def loadBuffersFromFile(hcomm, filename, wait=SYNCHRONOUS):
     # acs.acsc_LoadBuffersFromFile seems to be broken
-    # so wie mimic it and revert to loadBuffer
+    # So we mimic it and revert to loadBuffer
     progs = {}
     currbuffer = None
     currprg = ""
