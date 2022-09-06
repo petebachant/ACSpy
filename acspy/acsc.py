@@ -151,6 +151,14 @@ def openCommEthernetTCP(address="10.0.0.100", port=701):
     return hcomm
 
 
+def getSerialNumber(hcomm, wait=SYNCHRONOUS):
+    buffer_size = int32(ctypes.sizeof(s))
+    ser_num_len = int32()
+    call_acsc(acs.acsc_GetSerialNumber, hcomm, s, buffer_size, byref(ser_num_len), wait)
+    serial_number = s.value.decode('ascii')
+    return serial_number
+
+
 def setVelocity(hcomm, axis, vel, wait=SYNCHRONOUS):
     """Sets axis velocity."""
     call_acsc(acs.acsc_SetVelocity, hcomm, axis, double(vel), wait)
@@ -690,8 +698,8 @@ def call_acsc(func, *args, **kwargs):  # wrap acs lib calls to handle errors
 
 if __name__ == "__main__":
     """Some testing can go here"""
-    # hc = openCommEthernetTCP()
-    hc = openCommDirect()
+    hc = openCommEthernetTCP()
+    # hc = openCommDirect()
     print(getOutput(hc, 1, 16))
     closeComm(hc)
 
