@@ -678,11 +678,13 @@ def setOutput(hcomm, port, bit, val, wait=SYNCHRONOUS):
     call_acsc(acs.acsc_SetOutput, hcomm, port, bit, val, wait)
 
 
-def call_acsc(func, *args, **kwargs):  # wrap acs lib calls to handle errors
+def call_acsc(func, *args, **kwargs):
+    """Wraps ACS library to handle errors."""
     rv = func(*args, **kwargs)
-    if rv == 0:  # there was an error!
-        err = acs.acsc_GetLastError()  # retrieve error code
+    if rv == 0:  # There was an error
+        err = acs.acsc_GetLastError()  # Retrieve error code
         err_lng = int32()
+        s = create_string_buffer(256)
         hc = args[0]
         if (
             acs.acsc_GetErrorString(
