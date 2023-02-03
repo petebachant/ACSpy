@@ -154,10 +154,18 @@ def openCommEthernetTCP(address="10.0.0.100", port=701):
 
 
 def getSerialNumber(hcomm, wait=SYNCHRONOUS):
+    s = create_string_buffer(256)
     buffer_size = int32(ctypes.sizeof(s))
     ser_num_len = int32()
-    call_acsc(acs.acsc_GetSerialNumber, hcomm, s, buffer_size, byref(ser_num_len), wait)
-    serial_number = s.value.decode('ascii')
+    call_acsc(
+        acs.acsc_GetSerialNumber,
+        hcomm,
+        s,
+        buffer_size,
+        byref(ser_num_len),
+        wait,
+    )
+    serial_number = s.value.decode("ascii")
     return serial_number
 
 
