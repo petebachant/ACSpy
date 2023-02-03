@@ -115,6 +115,7 @@ def openCommDirect():
     if hcomm == -1:
         err = getLastError()
         err_lng = int32()
+        s = create_string_buffer(256)
         if (
             acs.acsc_GetErrorString(
                 hcomm, int32(err), s, int32(ctypes.sizeof(s)), byref(err_lng)
@@ -136,6 +137,7 @@ def openCommEthernetTCP(address="10.0.0.100", port=701):
     if hcomm == -1:
         err = getLastError()
         err_lng = int32()
+        s = create_string_buffer(256)
         if (
             acs.acsc_GetErrorString(
                 hcomm, int32(err), s, int32(ctypes.sizeof(s)), byref(err_lng)
