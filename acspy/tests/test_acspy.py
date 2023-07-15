@@ -4,7 +4,9 @@ from __future__ import division, print_function
 
 import time
 
-from acspy import acsc, control
+import numpy as np
+
+from acspy import acsc, control, prgs
 
 
 def test_write_real():
@@ -55,3 +57,67 @@ def test_upload_prg():
     assert vel == 1333.0
     assert pos == 1.33
     acsc.closeComm(hc)
+
+
+def test_data_collection():
+    """Test continuous data collection."""
+    hc = acsc.openCommDirect()
+    collectdata = True
+    data = {
+        "carriage_vel": np.array([]),
+        "turbine_rpm": np.array([]),
+        "time": np.array([]),
+    }
+    dblen = 100
+    sr = 1000
+    sleeptime = float(dblen) / float(sr) / 2 * 1.05
+    print("Sleep time (s):", sleeptime)
+    # Create a data collection program
+    prg = prgs.ACSPLplusPrg()
+    prg.declare_2darray("GLOBAL", "real", "data", 3, dblen)
+    prg.addline("GLOBAL REAL start_time")
+    prg.addline("GLOBAL INT collect_data")
+    prg.addline("collect_data = 1")
+    prg.add_dc("data", dblen, sr, "TIME, FVEL(5), FVEL(4)", "/c")
+    prg.addline("start_time = TIME")
+    prg.addline("TILL collect_data = 0")
+    prg.addline("STOPDC")
+    prg.addstopline()
+    # Load program into the a buffer
+    acsc.loadBuffer(hc, 19, prg, 1024)
+    acsc.runBuffer(hc, 19)
+    collect = acsc.readInteger(hc, acsc.NONE, "collect_data")
+    while collect == 0:
+        time.sleep(0.01)
+        collect = acsc.readInteger(hc, acsc.NONE, "collect_data")
+    for n in range(10):
+        print("Data collection iteration", n)
+        time.sleep(sleeptime)
+        t0 = acsc.readReal(hc, acsc.NONE, "start_time")
+        newdata = acsc.readReal(hc, acsc.NONE, "data", 0, 2, 0, dblen // 2 - 1)
+        t = (newdata[0] - t0) / 1000.0
+        data["time"] = np.append(data["time"], t)
+        data["carriage_vel"] = np.append(data["carriage_vel"], newdata[1])
+        data["turbine_rpm"] = np.append(data["turbine_rpm"], newdata[2])
+        time.sleep(sleeptime)
+        newdata = acsc.readReal(
+            hc,
+            acsc.NONE,
+            "data",
+            0,
+            2,
+            dblen // 2,
+            dblen - 1,
+        )
+        t = (newdata[0] - t0) / 1000.0
+        data["time"] = np.append(data["time"], t)
+        data["time"] = data["time"] - data["time"][0]
+        data["carriage_vel"] = np.append(data["carriage_vel"], newdata[1])
+        data["turbine_rpm"] = np.append(data["turbine_rpm"], newdata[2])
+
+
+def test_acsplplusprg():
+    prg = prgs.ACSPLplusPrg()
+    prg.addline("test")
+    prg.addstopline()
+    print(prg)
