@@ -1,11 +1,7 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Aug 26 23:26:33 2013
-
-@author: Pete
-"""
+"""Read a real value from a controller."""
 
 from __future__ import division, print_function
+
 from acspy import acsc
 
 hc = acsc.openCommDirect()
