@@ -1,10 +1,10 @@
-# -*- coding: utf-8 -*-
-"""
-This module contains tests for the ACSpy package.
-"""
+"""Tests for the ACSpy package."""
+
 from __future__ import division, print_function
-from acspy import acsc, control
+
 import time
+
+from acspy import acsc, control
 
 
 def test_write_real():
@@ -27,16 +27,16 @@ def test_controller():
     controller = control.Controller("simulator")
     controller.connect()
     x = controller.axes[0]
-    assert(x.rpos==0)
+    assert x.rpos == 0
     x.enable()
     x.vel = 10000
     x.acc = 100000
     x.dec = 100000
     x.ptp(1000)
     time.sleep(1)
-    assert(x.rpos==1000)
-    assert(x.acc==100000)
-    assert(x.dec==100000)
+    assert x.rpos == 1000
+    assert x.acc == 100000
+    assert x.dec == 100000
     controller.disconnect()
     print("PASS")
 
