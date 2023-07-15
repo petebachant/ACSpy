@@ -83,6 +83,7 @@ def test_data_collection():
     prg.addline("TILL collect_data = 0")
     prg.addline("STOPDC")
     prg.addstopline()
+    print("Program:\n", prg)
     # Load program into the a buffer
     acsc.loadBuffer(hc, 19, prg, 1024)
     acsc.runBuffer(hc, 19)
@@ -94,26 +95,41 @@ def test_data_collection():
         print("Data collection iteration", n)
         time.sleep(sleeptime)
         t0 = acsc.readReal(hc, acsc.NONE, "start_time")
-        newdata = acsc.readReal(hc, acsc.NONE, "data", 0, 2, 0, dblen // 2 - 1)
+        print("Start time:", t0)
+        to2 = dblen // 2 - 1
+        print("to2:", to2)
+        newdata = acsc.readReal(
+            hcomm=hc,
+            buffno=acsc.NONE,
+            varname="data",
+            from1=0,
+            to1=2,
+            from2=0,
+            to2=to2,
+        )
         t = (newdata[0] - t0) / 1000.0
         data["time"] = np.append(data["time"], t)
         data["carriage_vel"] = np.append(data["carriage_vel"], newdata[1])
         data["turbine_rpm"] = np.append(data["turbine_rpm"], newdata[2])
         time.sleep(sleeptime)
+        from2 = dblen // 2
+        to2 = dblen - 1
+        print(f"from2: {from2} -- to2: {to2}")
         newdata = acsc.readReal(
-            hc,
-            acsc.NONE,
-            "data",
-            0,
-            2,
-            dblen // 2,
-            dblen - 1,
+            hcomm=hc,
+            buffno=acsc.NONE,
+            varname="data",
+            from1=0,
+            to1=2,
+            from2=from2,
+            to2=to2,
         )
         t = (newdata[0] - t0) / 1000.0
         data["time"] = np.append(data["time"], t)
         data["time"] = data["time"] - data["time"][0]
         data["carriage_vel"] = np.append(data["carriage_vel"], newdata[1])
         data["turbine_rpm"] = np.append(data["turbine_rpm"], newdata[2])
+        print(data)
 
 
 def test_acsplplusprg():

@@ -1,17 +1,13 @@
-# -*- coding: utf-8 -*-
-"""
-ACSC
-----
+"""This module is a wrapper for the ACS C library using ctypes."""
 
-This module is a wrapper for the ACS C library using ctypes
-
-"""
 from __future__ import division, print_function
+
 import ctypes
-from ctypes import byref, create_string_buffer
-import numpy as np
 import platform
 import re
+from ctypes import byref, create_string_buffer
+
+import numpy as np
 
 
 class AcscError(Exception):
@@ -25,6 +21,7 @@ if platform.architecture()[0] == "64bit":
     acs = ctypes.windll.LoadLibrary("ACSCL_x64.dll")
 
 int32 = ctypes.c_long
+int64 = ctypes.c_int64
 uInt32 = ctypes.c_ulong
 uInt64 = ctypes.c_ulonglong
 float_ = ctypes.c_float
@@ -503,10 +500,10 @@ def readReal(
     """Read real variable (scalar or array) from the controller."""
     if from2 == NONE and to2 == NONE and from1 != NONE:
         values = np.zeros((to1 - from1 + 1), dtype=np.float64)
-        pointer = values.ctypes.data
+        pointer = values.ctypes.data_as(ctypes.POINTER(ctypes.c_double))
     elif from2 != NONE:
         values = np.zeros((to1 - from1 + 1, to2 - from2 + 1), dtype=np.float64)
-        pointer = values.ctypes.data
+        pointer = values.ctypes.data_as(ctypes.POINTER(ctypes.c_double))
     else:
         values = double()
         pointer = byref(values)
