@@ -61,8 +61,11 @@ def test_upload_prg():
 
 def test_data_collection():
     """Test continuous data collection."""
+
+    def get_collect_data() -> bool:
+        return bool(acsc.readInteger(hc, acsc.NONE, "collect_data"))
+
     hc = acsc.openCommDirect()
-    collectdata = True
     data = {
         "carriage_vel": np.array([]),
         "turbine_rpm": np.array([]),
@@ -80,18 +83,24 @@ def test_data_collection():
     prg.addline("collect_data = 1")
     prg.add_dc("data", dblen, sr, "TIME, FVEL(5), FVEL(4)", "/c")
     prg.addline("start_time = TIME")
-    prg.addline("TILL collect_data = 0")
+    prg.addline("VEL(5) = 1.0")
+    prg.addline("ACC(5) = 1.0")
+    prg.addline("PTP/e 5, 1.0")
+    prg.addline("PTP/e 5, 0.0")
+    prg.addline("collect_data = 0")
     prg.addline("STOPDC")
     prg.addstopline()
     print("Program:\n", prg)
+    # Enable axis 5
+    acsc.enable(hc, 5)
     # Load program into the a buffer
     acsc.loadBuffer(hc, 19, prg, 1024)
     acsc.runBuffer(hc, 19)
-    collect = acsc.readInteger(hc, acsc.NONE, "collect_data")
-    while collect == 0:
+    while not get_collect_data():
         time.sleep(0.01)
-        collect = acsc.readInteger(hc, acsc.NONE, "collect_data")
-    for n in range(10):
+    n = 0
+    while get_collect_data():
+        n += 1
         print("Data collection iteration", n)
         time.sleep(sleeptime)
         t0 = acsc.readReal(hc, acsc.NONE, "start_time")
@@ -108,6 +117,9 @@ def test_data_collection():
             to2=to2,
         )
         t = (newdata[0] - t0) / 1000.0
+        val = acsc.getRVelocity(hcomm=hc, axis=5)
+        pos = acsc.getRPosition(hcomm=hc, axis=5)
+        print("Ref vel:", val, "Ref pos:", pos)
         data["time"] = np.append(data["time"], t)
         data["carriage_vel"] = np.append(data["carriage_vel"], newdata[1])
         data["turbine_rpm"] = np.append(data["turbine_rpm"], newdata[2])
@@ -129,7 +141,8 @@ def test_data_collection():
         data["time"] = data["time"] - data["time"][0]
         data["carriage_vel"] = np.append(data["carriage_vel"], newdata[1])
         data["turbine_rpm"] = np.append(data["turbine_rpm"], newdata[2])
-        print(data)
+    assert abs(data["carriage_vel"]).sum() > 0
+    print(data)
 
 
 def test_acsplplusprg():
