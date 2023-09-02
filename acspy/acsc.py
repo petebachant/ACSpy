@@ -300,27 +300,20 @@ def toPointM(hcomm, flags, axes, target, wait=SYNCHRONOUS):
     call_acsc(acs.acsc_ToPointM, hcomm, flags, axes_c, target_c, wait)
 
 
-def enable(hcomm, axis, wait=SYNCHRONOUS):
+def enableMotor(hcomm, axis:int, wait=SYNCHRONOUS):
+    """The function activates a motor."""
     call_acsc(acs.acsc_Enable, hcomm, int32(axis), wait)
 
 
-def commutate(
-    hcomm,
-    axis,
-    current=DEFAULT,
-    settle=DEFAULT,
-    slope=DEFAULT,
-    wait=SYNCHRONOUS,
-):
-    call_acsc(
-        acs.acsc_CommutExt,
-        hcomm,
-        int32(axis),
-        float_(current),
-        int32(settle),
-        int32(slope),
-        wait,
-    )
+def enableMotors(hcomm, axes:list, wait=SYNCHRONOUS):
+    """The function activates several motors."""
+    axes_array = (ctypes.c_int * len(axes))(*axes)
+    call_acsc(acs.acsc_EnableM(hcomm, axes_array, wait))
+
+
+def commutateMotor(hcomm, axis:int, current=DEFAULT, settle=DEFAULT, slope=DEFAULT, wait=SYNCHRONOUS):
+    """This function initiates a motor commutation."""
+    call_acsc(acs.acsc_CommutExt, hcomm, int32(axis), float_(current), int32(settle), int32(slope), wait)
 
 
 def waitCommutated(hcomm, axis, timeout=INFINITE):
