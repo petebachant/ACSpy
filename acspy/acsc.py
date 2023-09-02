@@ -217,6 +217,29 @@ def getMotorState(hcomm, axis, wait=SYNCHRONOUS):
     return mst
 
 
+def getMotorError(hcomm, axis, wait=SYNCHRONOUS):
+    """Get the motor error for disabling."""
+    error = ctypes.c_int()
+    call_acsc(acs.acsc_GetMotorError, hcomm, axis, byref(error), wait)
+    error = error.value
+    return error    
+
+def getErrorString(hcomm, error:int):
+    """Retrieves the explanation of an error code."""
+    err_lng = int32()
+    s = create_string_buffer(256)
+    call_acsc(
+        acs.acsc_GetErrorString, 
+        hcomm, 
+        error, 
+        s, 
+        int32(ctypes.sizeof(s)), 
+        byref(err_lng)
+    )
+    error_string = s.value.decode("ascii")
+    return error_string
+
+
 def getAxisState(hcomm, axis, wait=SYNCHRONOUS):
     """Gets the axis state. Returns a dictionary with the following keys
     * "lead"
@@ -704,6 +727,9 @@ def call_acsc(func, *args, **kwargs):
             raise AcscError(err)
     return rv
 
+def cancelOperation(hcomm, wait=SYNCHRONOUS):
+    """Cancels all of the waiting and non-waiting calls."""
+    call_acsc(acs.acsc_CancelOperation, hcomm, wait)
 
 if __name__ == "__main__":
     """Some testing can go here"""
