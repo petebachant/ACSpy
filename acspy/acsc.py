@@ -308,7 +308,7 @@ def enableMotor(hcomm, axis:int, wait=SYNCHRONOUS):
 def enableMotors(hcomm, axes:list, wait=SYNCHRONOUS):
     """The function activates several motors."""
     axes_array = (ctypes.c_int * len(axes))(*axes)
-    call_acsc(acs.acsc_EnableM(hcomm, axes_array, wait))
+    call_acsc(acs.acsc_EnableM, hcomm, axes_array, wait)
 
 
 def commutateMotor(hcomm, axis:int, current=DEFAULT, settle=DEFAULT, slope=DEFAULT, wait=SYNCHRONOUS):
@@ -326,9 +326,20 @@ def waitCommutated(hcomm, axis, timeout=INFINITE):
     )
 
 
-def disable(hcomm, axis, wait=SYNCHRONOUS):
+def disableMotor(hcomm, axis, wait=SYNCHRONOUS):
+    """The function shuts off a motor."""
     call_acsc(acs.acsc_Disable, hcomm, int32(axis), wait)
 
+
+def disableAllMotors(hcomm,wait=SYNCHRONOUS):
+    """The function shuts off all motors."""
+    call_acsc(acs.acsc_DisableAll, hcomm, wait)
+
+
+def disableMotors(hcomm, axes:list, wait=SYNCHRONOUS):
+    """The function shuts off several specified motors."""
+    axes_array = (ctypes.c_int * len(axes))(*axes)
+    call_acsc(acs.acsc_DisableM, hcomm, axes_array, wait)
 
 def getRPosition(hcomm, axis, wait=SYNCHRONOUS):
     pos = double()
@@ -602,9 +613,7 @@ def uploadDataFromController(
 def loadBuffer(hcomm, buffnumber, program, count=512, wait=SYNCHRONOUS):
     """Load a buffer into the ACS controller."""
     prgbuff = ctypes.create_string_buffer(str(program).encode(), count)
-    call_acsc(
-        acs.acsc_LoadBuffer, hcomm, buffnumber, byref(prgbuff), count, wait
-    )
+    call_acsc(acs.acsc_LoadBuffer, hcomm, buffnumber, byref(prgbuff), count, wait)
 
 
 def loadBuffersFromFile(hcomm, filename, wait=SYNCHRONOUS):
