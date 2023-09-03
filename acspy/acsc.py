@@ -300,7 +300,7 @@ def toPointM(hcomm, flags, axes, target, wait=SYNCHRONOUS):
     call_acsc(acs.acsc_ToPointM, hcomm, flags, axes_c, target_c, wait)
 
 
-def enableMotor(hcomm, axis:int, wait=SYNCHRONOUS):
+def enable(hcomm, axis:int, wait=SYNCHRONOUS):
     """The function activates a motor."""
     call_acsc(acs.acsc_Enable, hcomm, int32(axis), wait)
 
@@ -311,9 +311,23 @@ def enableMotors(hcomm, axes:list, wait=SYNCHRONOUS):
     call_acsc(acs.acsc_EnableM, hcomm, axes_array, wait)
 
 
-def commutateMotor(hcomm, axis:int, current=DEFAULT, settle=DEFAULT, slope=DEFAULT, wait=SYNCHRONOUS):
-    """This function initiates a motor commutation."""
-    call_acsc(acs.acsc_CommutExt, hcomm, int32(axis), float_(current), int32(settle), int32(slope), wait)
+def commutate(
+    hcomm,
+    axis,
+    current=DEFAULT,
+    settle=DEFAULT,
+    slope=DEFAULT,
+    wait=SYNCHRONOUS,
+):
+    call_acsc(
+        acs.acsc_CommutExt,
+        hcomm,
+        int32(axis),
+        float_(current),
+        int32(settle),
+        int32(slope),
+        wait,
+    )
 
 
 def waitCommutated(hcomm, axis, timeout=INFINITE):
@@ -326,7 +340,7 @@ def waitCommutated(hcomm, axis, timeout=INFINITE):
     )
 
 
-def disableMotor(hcomm, axis, wait=SYNCHRONOUS):
+def disable(hcomm, axis, wait=SYNCHRONOUS):
     """The function shuts off a motor."""
     call_acsc(acs.acsc_Disable, hcomm, int32(axis), wait)
 
@@ -340,6 +354,7 @@ def disableMotors(hcomm, axes:list, wait=SYNCHRONOUS):
     """The function shuts off several specified motors."""
     axes_array = (ctypes.c_int * len(axes))(*axes)
     call_acsc(acs.acsc_DisableM, hcomm, axes_array, wait)
+
 
 def getRPosition(hcomm, axis, wait=SYNCHRONOUS):
     pos = double()
