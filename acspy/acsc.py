@@ -167,32 +167,32 @@ def getSerialNumber(hcomm, wait=SYNCHRONOUS):
     return serial_number
 
 
-def setVelocity(hcomm, axis:int, vel:double, wait=SYNCHRONOUS):
+def setVelocity(hcomm, axis: int, vel: double, wait=SYNCHRONOUS):
     """Sets axis velocity."""
     call_acsc(acs.acsc_SetVelocity, hcomm, axis, double(vel), wait)
 
 
-def setAcceleration(hcomm, axis:int, acc:double, wait=SYNCHRONOUS):
+def setAcceleration(hcomm, axis: int, acc: double, wait=SYNCHRONOUS):
     """Sets axis acceleration."""
     call_acsc(acs.acsc_SetAcceleration, hcomm, axis, double(acc), wait)
 
 
-def setDeceleration(hcomm, axis:int, dec:double, wait=SYNCHRONOUS):
+def setDeceleration(hcomm, axis: int, dec: double, wait=SYNCHRONOUS):
     """Sets axis deceleration."""
     call_acsc(acs.acsc_SetDeceleration, hcomm, axis, double(dec), wait)
 
 
-def setKillDeceleration(hcomm, axis:int, dec:double, wait=SYNCHRONOUS):
+def setKillDeceleration(hcomm, axis: int, dec: double, wait=SYNCHRONOUS):
     """Sets axis deceleration."""
     call_acsc(acs.acsc_SetKillDeceleration, hcomm, axis, double(dec), wait)
 
 
-def setJerk(hcomm, axis:int, jerk:double, wait=SYNCHRONOUS):
+def setJerk(hcomm, axis: int, jerk: double, wait=SYNCHRONOUS):
     """Defines a value of motion jerk."""
     call_acsc(acs.acsc_SetJerk, hcomm, axis, double(jerk), wait)
 
 
-def getMotorEnabled(hcomm, axis:int, wait=SYNCHRONOUS):
+def getMotorEnabled(hcomm, axis: int, wait=SYNCHRONOUS):
     """Checks if motor is enabled."""
     state = ctypes.c_int()
     call_acsc(acs.acsc_GetMotorState, hcomm, axis, byref(state), wait)
@@ -200,7 +200,7 @@ def getMotorEnabled(hcomm, axis:int, wait=SYNCHRONOUS):
     return hex(state)[-1] == "1"
 
 
-def getMotorState(hcomm, axis:int, wait=SYNCHRONOUS):
+def getMotorState(hcomm, axis: int, wait=SYNCHRONOUS):
     """Gets the motor state. Returns a dictionary with the following keys:
     * "enabled"
     * "in position"
@@ -219,31 +219,31 @@ def getMotorState(hcomm, axis:int, wait=SYNCHRONOUS):
     return mst
 
 
-def getMotorError(hcomm, axis:int, wait=SYNCHRONOUS):
+def getMotorError(hcomm, axis: int, wait=SYNCHRONOUS):
     """Get the motor error for disabling."""
     error = ctypes.c_int()
     call_acsc(acs.acsc_GetMotorError, hcomm, axis, byref(error), wait)
     error = error.value
-    return error    
+    return error
 
 
-def getErrorString(hcomm, error:int):
+def getErrorString(hcomm, error: int):
     """Retrieves the explanation of an error code."""
     err_lng = int32()
     s = create_string_buffer(256)
     call_acsc(
-        acs.acsc_GetErrorString, 
-        hcomm, 
-        error, 
-        s, 
-        int32(ctypes.sizeof(s)), 
-        byref(err_lng)
+        acs.acsc_GetErrorString,
+        hcomm,
+        error,
+        s,
+        int32(ctypes.sizeof(s)),
+        byref(err_lng),
     )
     error_string = s.value.decode("ascii")
     return error_string
 
 
-def getAxisState(hcomm, axis:int, wait=SYNCHRONOUS):
+def getAxisState(hcomm, axis: int, wait=SYNCHRONOUS):
     """Gets the axis state. Returns a dictionary with the following keys
     * "lead"
     * "DC"
@@ -277,17 +277,17 @@ def registerEmergencyStop():
     call_acsc(acs.acsc_RegisterEmergencyStop)
 
 
-def jog(hcomm, flags:int, axis:int, vel:double, wait=SYNCHRONOUS):
+def jog(hcomm, flags: int, axis: int, vel: double, wait=SYNCHRONOUS):
     """Initiates a single-axis jog motion."""
     call_acsc(acs.acsc_Jog, hcomm, flags, axis, double(vel), wait)
 
 
-def toPoint(hcomm, flags:int, axis:int, target:double, wait=SYNCHRONOUS):
+def toPoint(hcomm, flags: int, axis: int, target: double, wait=SYNCHRONOUS):
     """Point to point move."""
     call_acsc(acs.acsc_ToPoint, hcomm, flags, axis, double(target), wait)
 
 
-def toPointM(hcomm, flags:int, axes:tuple, target:tuple, wait=SYNCHRONOUS):
+def toPointM(hcomm, flags: int, axes: tuple, target: tuple, wait=SYNCHRONOUS):
     """Initiates a multi-axis move to the specified target. Axes and target
     are entered as tuples. Set flags as None for absolute coordinates."""
     if len(axes) != len(target):
@@ -303,12 +303,12 @@ def toPointM(hcomm, flags:int, axes:tuple, target:tuple, wait=SYNCHRONOUS):
     call_acsc(acs.acsc_ToPointM, hcomm, flags, axes_c, target_c, wait)
 
 
-def enable(hcomm, axis:int, wait=SYNCHRONOUS):
+def enable(hcomm, axis: int, wait=SYNCHRONOUS):
     """The function activates a motor."""
     call_acsc(acs.acsc_Enable, hcomm, int32(axis), wait)
 
 
-def enableMotors(hcomm, axes:list, wait=SYNCHRONOUS):
+def enableMotors(hcomm, axes: list, wait=SYNCHRONOUS):
     """The function activates several motors."""
     axes_array = (ctypes.c_int * len(axes))(*axes)
     call_acsc(acs.acsc_EnableM, hcomm, axes_array, wait)
@@ -333,7 +333,7 @@ def commutate(
     )
 
 
-def waitCommutated(hcomm, axis:int, timeout=INFINITE):
+def waitCommutated(hcomm, axis: int, timeout=INFINITE):
     """Wait for commutation to finish.
 
     Default timeout is 30 seconds.
@@ -343,68 +343,68 @@ def waitCommutated(hcomm, axis:int, timeout=INFINITE):
     )
 
 
-def disable(hcomm, axis:int, wait=SYNCHRONOUS):
+def disable(hcomm, axis: int, wait=SYNCHRONOUS):
     """The function shuts off a motor."""
     call_acsc(acs.acsc_Disable, hcomm, int32(axis), wait)
 
 
-def disableAllMotors(hcomm,wait=SYNCHRONOUS):
+def disableAllMotors(hcomm, wait=SYNCHRONOUS):
     """The function shuts off all motors."""
     call_acsc(acs.acsc_DisableAll, hcomm, wait)
 
 
-def disableMotors(hcomm, axes:list, wait=SYNCHRONOUS):
+def disableMotors(hcomm, axes: list, wait=SYNCHRONOUS):
     """The function shuts off several specified motors."""
     axes_array = (ctypes.c_int * len(axes))(*axes)
     call_acsc(acs.acsc_DisableM, hcomm, axes_array, wait)
 
 
-def getRPosition(hcomm, axis:int, wait=SYNCHRONOUS):
+def getRPosition(hcomm, axis: int, wait=SYNCHRONOUS):
     pos = double()
     call_acsc(acs.acsc_GetRPosition, hcomm, axis, p(pos), wait)
     return pos.value
 
 
-def getFPosition(hcomm, axis:int, wait=SYNCHRONOUS):
+def getFPosition(hcomm, axis: int, wait=SYNCHRONOUS):
     pos = double()
     call_acsc(acs.acsc_GetFPosition, hcomm, axis, byref(pos), wait)
     return pos.value
 
 
-def getRVelocity(hcomm, axis:int, wait=SYNCHRONOUS):
+def getRVelocity(hcomm, axis: int, wait=SYNCHRONOUS):
     rvel = double()
     call_acsc(acs.acsc_GetRVelocity, hcomm, axis, byref(rvel), wait)
     return rvel.value
 
 
-def getFVelocity(hcomm, axis:int, wait=SYNCHRONOUS):
+def getFVelocity(hcomm, axis: int, wait=SYNCHRONOUS):
     vel = double()
     call_acsc(acs.acsc_GetFVelocity, hcomm, axis, byref(vel), wait)
     return vel.value
 
 
-def getVelocity(hcomm, axis:int, wait=SYNCHRONOUS):
+def getVelocity(hcomm, axis: int, wait=SYNCHRONOUS):
     """Returns current velocity for specified axis."""
     vel = double()
     call_acsc(acs.acsc_GetVelocity, hcomm, axis, byref(vel), wait)
     return vel.value
 
 
-def getAcceleration(hcomm, axis:int, wait=SYNCHRONOUS):
+def getAcceleration(hcomm, axis: int, wait=SYNCHRONOUS):
     """Returns current acceleration for specified axis."""
     val = double()
     call_acsc(acs.acsc_GetAcceleration, hcomm, axis, byref(val), wait)
     return val.value
 
 
-def getDeceleration(hcomm, axis:int, wait=SYNCHRONOUS):
+def getDeceleration(hcomm, axis: int, wait=SYNCHRONOUS):
     """Returns current deceleration for specified axis."""
     val = double()
     call_acsc(acs.acsc_GetDeceleration, hcomm, axis, byref(val), wait)
     return val.value
 
 
-def getKillDeceleration(hcomm, axis:int, wait=SYNCHRONOUS):
+def getKillDeceleration(hcomm, axis: int, wait=SYNCHRONOUS):
     """Returns current deceleration for specified axis."""
     val = double()
     call_acsc(acs.acsc_GetKillDeceleration, hcomm, axis, byref(val), wait)
@@ -448,7 +448,7 @@ def getProgramState(hc, nbuf, wait=SYNCHRONOUS):
     return state.value
 
 
-def halt(hcomm, axis:int, wait=SYNCHRONOUS):
+def halt(hcomm, axis: int, wait=SYNCHRONOUS):
     """Halts motion on specified axis."""
     call_acsc(acs.acsc_Halt, hcomm, axis, wait)
 
@@ -512,20 +512,20 @@ def writeInteger(
     )
 
 
-def readMflag(hcomm, axis:int, flag_nm):
+def readMflag(hcomm, axis: int, flag_nm):
     """read a Mflag. For definition refer to ax_mflags at the top"""
     allFlags = readInteger(hcomm, None, "MFLAGS", axis, axis + 1)
     return bool(((1 << ax_mflags[flag_nm]) & allFlags))
 
 
-def setMflag(hcomm, axis:int, flag_nm):
+def setMflag(hcomm, axis: int, flag_nm):
     """Set a Mflag. For definition refer to ax_mflags at the top"""
     allFlags = readInteger(hcomm, None, "MFLAGS", axis, axis + 1)
     allFlags |= 2 ** (ax_mflags[flag_nm])
     writeInteger(hcomm, "MFLAGS", allFlags)
 
 
-def clearMflag(hcomm, axis:int, flag_nm):
+def clearMflag(hcomm, axis: int, flag_nm):
     """Clear a Mflag. For definition refer to ax_mflags at the top"""
     allFlags = readInteger(hcomm, None, "MFLAGS", axis, axis + 1)
     allFlags &= ~(2 ** (ax_mflags[flag_nm]))
@@ -631,7 +631,9 @@ def uploadDataFromController(
 def loadBuffer(hcomm, buffnumber, program, count=512, wait=SYNCHRONOUS):
     """Load a buffer into the ACS controller."""
     prgbuff = ctypes.create_string_buffer(str(program).encode(), count)
-    call_acsc(acs.acsc_LoadBuffer, hcomm, buffnumber, byref(prgbuff), count, wait)
+    call_acsc(
+        acs.acsc_LoadBuffer, hcomm, buffnumber, byref(prgbuff), count, wait
+    )
 
 
 def loadBuffersFromFile(hcomm, filename, wait=SYNCHRONOUS):
@@ -670,17 +672,21 @@ def compileBuffer(hcomm, buffnumber, wait=SYNCHRONOUS):
     call_acsc(acs.acsc_CompileBuffer, hcomm, buffnumber, wait)
 
 
-def spline(hcomm, flags:int, axis:int, period:double, wait=SYNCHRONOUS):
+def spline(hcomm, flags: int, axis: int, period: double, wait=SYNCHRONOUS):
     call_acsc(acs.acsc_Spline, hcomm, flags, axis, double(period), wait)
 
 
-def addPVPoint(hcomm, axis:int, point:double, velocity:double, wait=SYNCHRONOUS):
+def addPVPoint(
+    hcomm, axis: int, point: double, velocity: double, wait=SYNCHRONOUS
+):
     call_acsc(
         acs.acsc_AddPVPoint, hcomm, axis, double(point), double(velocity), wait
     )
 
 
-def addPVTPoint(hcomm, axis:int, point:double, velocity:double, dt, wait=SYNCHRONOUS):
+def addPVTPoint(
+    hcomm, axis: int, point: double, velocity: double, dt, wait=SYNCHRONOUS
+):
     call_acsc(
         acs.acsc_AddPVTPoint,
         hcomm,
@@ -692,36 +698,38 @@ def addPVTPoint(hcomm, axis:int, point:double, velocity:double, dt, wait=SYNCHRO
     )
 
 
-def multiPoint(hcomm, flags:int, axis:int, dwell:double, wait=SYNCHRONOUS):
+def multiPoint(hcomm, flags: int, axis: int, dwell: double, wait=SYNCHRONOUS):
     call_acsc(acs.acsc_MultiPoint, hcomm, flags, axis, double(dwell), wait)
 
 
-def addPoint(hcomm, axis:int, point:double, wait=SYNCHRONOUS):
+def addPoint(hcomm, axis: int, point: double, wait=SYNCHRONOUS):
     call_acsc(acs.acsc_AddPoint, hcomm, axis, double(point), wait)
 
 
-def extAddPoint(hcomm, axis:int, point:double, rate:double, wait=SYNCHRONOUS):
+def extAddPoint(
+    hcomm, axis: int, point: double, rate: double, wait=SYNCHRONOUS
+):
     call_acsc(
         acs.acsc_ExtAddPoint, hcomm, axis, double(point), double(rate), wait
     )
 
 
-def endSequence(hcomm, axis:int, wait=SYNCHRONOUS):
+def endSequence(hcomm, axis: int, wait=SYNCHRONOUS):
     call_acsc(acs.acsc_EndSequence, hcomm, axis, wait)
 
 
-def go(hcomm, axis:int, wait=SYNCHRONOUS):
+def go(hcomm, axis: int, wait=SYNCHRONOUS):
     call_acsc(acs.acsc_Go, hcomm, axis, wait)
 
 
-def getOutput(hcomm, port:int, bit:int, wait=SYNCHRONOUS):
+def getOutput(hcomm, port: int, bit: int, wait=SYNCHRONOUS):
     """Returns the value of a digital output."""
     val = int32()
     call_acsc(acs.acsc_GetOutput, hcomm, port, bit, byref(val), wait)
     return val.value
 
 
-def setOutput(hcomm, port:int, bit:int, val:int, wait=SYNCHRONOUS):
+def setOutput(hcomm, port: int, bit: int, val: int, wait=SYNCHRONOUS):
     """Sets the value of a digital output."""
     call_acsc(acs.acsc_SetOutput, hcomm, port, bit, val, wait)
 
@@ -747,9 +755,11 @@ def call_acsc(func, *args, **kwargs):
             raise AcscError(err)
     return rv
 
+
 def cancelOperation(hcomm, wait=SYNCHRONOUS):
     """Cancels all of the waiting and non-waiting calls."""
     call_acsc(acs.acsc_CancelOperation, hcomm, wait)
+
 
 if __name__ == "__main__":
     """Some testing can go here"""
