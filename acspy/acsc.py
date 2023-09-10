@@ -192,6 +192,11 @@ def setJerk(hcomm, axis: int, jerk: double, wait=SYNCHRONOUS):
     call_acsc(acs.acsc_SetJerk, hcomm, axis, double(jerk), wait)
 
 
+def setRPosition(hcomm, axis: int, rpos: double, wait=SYNCHRONOUS):
+    """Asigns a current value of reference position."""
+    call_acsc(acs.acsc_SetRPosition, hcomm, axis, double(rpos), wait)
+
+
 def getMotorEnabled(hcomm, axis: int, wait=SYNCHRONOUS):
     """Checks if motor is enabled."""
     state = ctypes.c_int()
@@ -271,6 +276,13 @@ def getAxisState(hcomm, axis: int, wait=SYNCHRONOUS):
     }
     return ast
 
+
+def getFPosition(hcomm, axis:int, wait=SYNCHRONOUS):
+    """Retrieves an instant value of the motor feedback position."""
+    fposition = ctypes.c_double()
+    call_acsc(acs.acsc_GetFPosition, hcomm, axis, byref(fposition), wait)
+    fposition = fposition.value
+    return fposition
 
 def registerEmergencyStop():
     """Register the software emergency stop."""
