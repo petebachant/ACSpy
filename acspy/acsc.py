@@ -30,7 +30,6 @@ char = ctypes.c_char
 p = ctypes.pointer
 s = create_string_buffer(256)
 
-
 # Define motion flags and constants
 AMF_WAIT = 0x00000001
 AMF_RELATIVE = 0x00000002
