@@ -105,7 +105,10 @@ ax_mflags = {
 
 
 def openCommDirect():
-    """Open simulator. Returns communication handle."""
+    """Open simulator.
+
+    Returns communication handle.
+    """
     # caution: acs does treat errors differently for openComm functions!
     hcomm = acs.acsc_OpenCommDirect()
     if hcomm == -1:
@@ -126,8 +129,9 @@ def openCommDirect():
     return hcomm
 
 
-def openCommEthernetTCP(address="10.0.0.100", port=701):
-    """Address is a string. Port is an int.
+def openCommEthernetTCP(address: str = "10.0.0.100", port: int = 701):
+    """Address is a string.
+
     Returns communication handle."""
     hcomm = acs.acsc_OpenCommEthernetTCP(address.encode(), port)
     if hcomm == -1:
@@ -145,7 +149,6 @@ def openCommEthernetTCP(address="10.0.0.100", port=701):
             raise AcscError(str(err) + ": " + err_str)
         else:
             raise AcscError(err)
-
     return hcomm
 
 
@@ -248,16 +251,18 @@ def getErrorString(hcomm, error: int):
 
 
 def getAxisState(hcomm, axis: int, wait=SYNCHRONOUS):
-    """Gets the axis state. Returns a dictionary with the following keys
-    * "lead"
-    * "DC"
-    * "PEG"
-    * "PEGREADY"
-    * "moving"
-    * "accelerating"
-    * "segment"
-    * "vel lock"
-    * "pos lock"
+    """Gets the axis state.
+
+    Returns a dictionary with the following keys
+        * "lead"
+        * "DC"
+        * "PEG"
+        * "PEGREADY"
+        * "moving"
+        * "accelerating"
+        * "segment"
+        * "vel lock"
+        * "pos lock"
     """
     state = ctypes.c_int()
     call_acsc(acs.acsc_GetAxisState, hcomm, axis, byref(state), wait)
@@ -276,12 +281,13 @@ def getAxisState(hcomm, axis: int, wait=SYNCHRONOUS):
     return ast
 
 
-def getFPosition(hcomm, axis:int, wait=SYNCHRONOUS):
+def getFPosition(hcomm, axis: int, wait=SYNCHRONOUS):
     """Retrieves an instant value of the motor feedback position."""
     fposition = ctypes.c_double()
     call_acsc(acs.acsc_GetFPosition, hcomm, axis, byref(fposition), wait)
     fposition = fposition.value
     return fposition
+
 
 def registerEmergencyStop():
     """Register the software emergency stop."""
@@ -717,9 +723,7 @@ def addPoint(hcomm, axis: int, point: float, wait=SYNCHRONOUS):
     call_acsc(acs.acsc_AddPoint, hcomm, axis, double(point), wait)
 
 
-def extAddPoint(
-    hcomm, axis: int, point: float, rate: float, wait=SYNCHRONOUS
-):
+def extAddPoint(hcomm, axis: int, point: float, rate: float, wait=SYNCHRONOUS):
     call_acsc(
         acs.acsc_ExtAddPoint, hcomm, axis, double(point), double(rate), wait
     )
