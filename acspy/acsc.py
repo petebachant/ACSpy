@@ -1,6 +1,6 @@
 """This module is a wrapper for the ACS C library using ctypes."""
 
-from __future__ import division, print_function
+from __future__ import annotations, division, print_function
 
 import ctypes
 import platform
@@ -167,32 +167,32 @@ def getSerialNumber(hcomm, wait=SYNCHRONOUS):
     return serial_number
 
 
-def setVelocity(hcomm, axis: int, vel: double, wait=SYNCHRONOUS):
+def setVelocity(hcomm, axis: int, vel: float, wait=SYNCHRONOUS):
     """Sets axis velocity."""
     call_acsc(acs.acsc_SetVelocity, hcomm, axis, double(vel), wait)
 
 
-def setAcceleration(hcomm, axis: int, acc: double, wait=SYNCHRONOUS):
+def setAcceleration(hcomm, axis: int, acc: float, wait=SYNCHRONOUS):
     """Sets axis acceleration."""
     call_acsc(acs.acsc_SetAcceleration, hcomm, axis, double(acc), wait)
 
 
-def setDeceleration(hcomm, axis: int, dec: double, wait=SYNCHRONOUS):
+def setDeceleration(hcomm, axis: int, dec: float, wait=SYNCHRONOUS):
     """Sets axis deceleration."""
     call_acsc(acs.acsc_SetDeceleration, hcomm, axis, double(dec), wait)
 
 
-def setKillDeceleration(hcomm, axis: int, dec: double, wait=SYNCHRONOUS):
+def setKillDeceleration(hcomm, axis: int, dec: float, wait=SYNCHRONOUS):
     """Sets axis deceleration."""
     call_acsc(acs.acsc_SetKillDeceleration, hcomm, axis, double(dec), wait)
 
 
-def setJerk(hcomm, axis: int, jerk: double, wait=SYNCHRONOUS):
+def setJerk(hcomm, axis: int, jerk: float, wait=SYNCHRONOUS):
     """Defines a value of motion jerk."""
     call_acsc(acs.acsc_SetJerk, hcomm, axis, double(jerk), wait)
 
 
-def setRPosition(hcomm, axis: int, rpos: double, wait=SYNCHRONOUS):
+def setRPosition(hcomm, axis: int, rpos: float, wait=SYNCHRONOUS):
     """Asigns a current value of reference position."""
     call_acsc(acs.acsc_SetRPosition, hcomm, axis, double(rpos), wait)
 
@@ -289,12 +289,12 @@ def registerEmergencyStop():
     call_acsc(acs.acsc_RegisterEmergencyStop)
 
 
-def jog(hcomm, flags: int, axis: int, vel: double, wait=SYNCHRONOUS):
+def jog(hcomm, flags: int, axis: int, vel: float, wait=SYNCHRONOUS):
     """Initiates a single-axis jog motion."""
     call_acsc(acs.acsc_Jog, hcomm, flags, axis, double(vel), wait)
 
 
-def toPoint(hcomm, flags: int, axis: int, target: double, wait=SYNCHRONOUS):
+def toPoint(hcomm, flags: int, axis: int, target: float, wait=SYNCHRONOUS):
     """Point to point move."""
     call_acsc(acs.acsc_ToPoint, hcomm, flags, axis, double(target), wait)
 
@@ -684,12 +684,12 @@ def compileBuffer(hcomm, buffnumber, wait=SYNCHRONOUS):
     call_acsc(acs.acsc_CompileBuffer, hcomm, buffnumber, wait)
 
 
-def spline(hcomm, flags: int, axis: int, period: double, wait=SYNCHRONOUS):
+def spline(hcomm, flags: int, axis: int, period: float, wait=SYNCHRONOUS):
     call_acsc(acs.acsc_Spline, hcomm, flags, axis, double(period), wait)
 
 
 def addPVPoint(
-    hcomm, axis: int, point: double, velocity: double, wait=SYNCHRONOUS
+    hcomm, axis: int, point: float, velocity: float, wait=SYNCHRONOUS
 ):
     call_acsc(
         acs.acsc_AddPVPoint, hcomm, axis, double(point), double(velocity), wait
@@ -697,7 +697,7 @@ def addPVPoint(
 
 
 def addPVTPoint(
-    hcomm, axis: int, point: double, velocity: double, dt, wait=SYNCHRONOUS
+    hcomm, axis: int, point: float, velocity: float, dt, wait=SYNCHRONOUS
 ):
     call_acsc(
         acs.acsc_AddPVTPoint,
@@ -710,16 +710,16 @@ def addPVTPoint(
     )
 
 
-def multiPoint(hcomm, flags: int, axis: int, dwell: double, wait=SYNCHRONOUS):
+def multiPoint(hcomm, flags: int, axis: int, dwell: float, wait=SYNCHRONOUS):
     call_acsc(acs.acsc_MultiPoint, hcomm, flags, axis, double(dwell), wait)
 
 
-def addPoint(hcomm, axis: int, point: double, wait=SYNCHRONOUS):
+def addPoint(hcomm, axis: int, point: float, wait=SYNCHRONOUS):
     call_acsc(acs.acsc_AddPoint, hcomm, axis, double(point), wait)
 
 
 def extAddPoint(
-    hcomm, axis: int, point: double, rate: double, wait=SYNCHRONOUS
+    hcomm, axis: int, point: float, rate: float, wait=SYNCHRONOUS
 ):
     call_acsc(
         acs.acsc_ExtAddPoint, hcomm, axis, double(point), double(rate), wait
