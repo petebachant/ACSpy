@@ -5,6 +5,7 @@ from __future__ import annotations, division, print_function
 import ctypes
 import platform
 import re
+import warnings
 from ctypes import byref, create_string_buffer
 
 import numpy as np
@@ -104,13 +105,19 @@ ax_mflags = {
 }
 
 
-def openCommDirect():
+def open_comm_direct() -> int:
     """Open simulator.
 
     Returns communication handle.
     """
-    # caution: acs does treat errors differently for openComm functions!
+    warnings.warn(
+        "open_comm_direct is deprecated in favor of open_comm_simulator",
+        category=DeprecationWarning,
+    )
+    # Caution: acs does treat errors differently for openComm functions!
     hcomm = acs.acsc_OpenCommDirect()
+    if hcomm == -1:
+        hcomm = open_comm_simulator()
     if hcomm == -1:
         err = getLastError()
         err_lng = int32()
@@ -129,10 +136,43 @@ def openCommDirect():
     return hcomm
 
 
-def openCommEthernetTCP(address: str = "10.0.0.100", port: int = 701):
+def openCommDirect() -> int:
+    return open_comm_direct()
+
+
+def open_comm_simulator() -> int:
+    # Caution: acs does treat errors differently for openComm functions!
+    hcomm = acs.acsc_OpenCommSimulator()
+    if hcomm == -1:
+        hcomm = open_comm_direct()
+    if hcomm == -1:
+        err = getLastError()
+        err_lng = int32()
+        s = create_string_buffer(256)
+        if (
+            acs.acsc_GetErrorString(
+                hcomm, int32(err), s, int32(ctypes.sizeof(s)), byref(err_lng)
+            )
+            != 0
+        ):
+            s[err_lng.value] = 0
+            err_str = s.value.decode("ascii")
+            raise AcscError(str(err) + ": " + err_str)
+        else:
+            raise AcscError(err)
+    return hcomm
+
+
+def openCommEthernetTCP(address: str = "10.0.0.100", port: int = 701) -> int:
     """Address is a string.
 
     Returns communication handle."""
+    return open_comm_ethernet_tcp(address=address, port=port)
+
+
+def open_comm_ethernet_tcp(
+    address: str = "10.0.0.100", port: int = 701
+) -> int:
     hcomm = acs.acsc_OpenCommEthernetTCP(address.encode(), port)
     if hcomm == -1:
         err = getLastError()
@@ -167,6 +207,12 @@ def getSerialNumber(hcomm, wait=SYNCHRONOUS):
     )
     serial_number = s.value.decode("ascii")
     return serial_number
+
+
+def get_library_version() -> str:
+    resp: int = acs.acsc_GetLibraryVersion()
+    # TODO: Turn this into a string by extracting the bits appropriately
+    return resp
 
 
 def setVelocity(hcomm, axis: int, vel: float, wait=SYNCHRONOUS):
