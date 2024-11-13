@@ -795,6 +795,14 @@ def setOutput(hcomm, port: int, bit: int, val: int, wait=SYNCHRONOUS):
     call_acsc(acs.acsc_SetOutput, hcomm, port, bit, val, wait)
 
 
+def command(hcomm, command: str, wait=SYNCHRONOUS):
+    """Send a command to the ACS controller."""
+    cmd_with_return = (command + "\r").encode()
+    cmd_len = len(cmd_with_return)
+    cmd_buffer = ctypes.create_string_buffer(cmd_with_return)
+    return call_acsc(acs.acsc_Command, hcomm, cmd_buffer, cmd_len, wait)
+
+
 def call_acsc(func, *args, **kwargs):
     """Wraps ACS library to handle errors."""
     rv = func(*args, **kwargs)
